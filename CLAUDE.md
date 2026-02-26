@@ -44,7 +44,7 @@ fluent/
 ## Tech Stack
 - **Backend**: Python FastAPI, faster-whisper (STT), Piper TTS, eSpeak-NG + Phonemizer (IPA)
 - **Frontend**: Next.js 15, Tailwind CSS v4, Framer Motion, Zustand, next-intl, lucide-react
-- **DB**: Supabase PostgreSQL with RLS (local CLI dev via `npx supabase`)
+- **DB**: Supabase PostgreSQL with RLS (cloud project)
 - **LLM**: Multi-provider factory (DeepSeek default, Claude, OpenAI, Gemini)
 - **Auth**: Supabase Auth with middleware route protection
 
@@ -55,7 +55,7 @@ fluent/
 - Frontend build: `cd frontend && npm run build`
 - Frontend lint: `cd frontend && npm run lint`
 - Validate syllabus: `.venv/bin/python scripts/validate_syllabus.py`
-- Supabase: `npx supabase start` / `npx supabase stop`
+- Supabase: cloud project (no local CLI needed)
 - Docker: `docker compose up --build`
 
 ## Design System

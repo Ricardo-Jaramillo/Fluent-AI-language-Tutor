@@ -45,24 +45,25 @@ Choose your AI provider: DeepSeek V3 (default, cheapest), Claude, OpenAI, or Gem
 ### Prerequisites
 - Python 3.13+
 - Node.js 24+
-- [Supabase CLI](https://supabase.com/docs/guides/cli) (`npx supabase`)
+- A [Supabase](https://supabase.com) project (free tier works)
 - eSpeak-NG (`brew install espeak-ng` on macOS)
 
 ### 1. Clone and configure
 
 ```bash
-git clone <repo-url>
-cd fluent
+git clone https://github.com/Ricardo-Jaramillo/Fluent-AI-language-Tutor.git
+cd Fluent-AI-language-Tutor
 cp .env.example .env
-# Edit .env with your API keys (at minimum: DEEPSEEK_API_KEY)
+# Edit .env with your Supabase URL/keys and at minimum: DEEPSEEK_API_KEY
 ```
 
-### 2. Start Supabase
+### 2. Set up Supabase
 
-```bash
-npx supabase start
-# Copy the anon key and URL into your .env and frontend/.env.local
-```
+1. Create a project at [supabase.com/dashboard](https://supabase.com/dashboard)
+2. Go to **Project Settings > API** and copy the URL and anon key
+3. Add them to `.env` (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
+4. Create a `frontend/.env.local` with the same values plus `NEXT_PUBLIC_BACKEND_URL=http://localhost:8000`
+5. Run the migration in the Supabase SQL Editor (paste `supabase/migrations/20260224000000_initial_schema.sql`)
 
 ### 3. Backend
 
@@ -86,11 +87,11 @@ Open [http://localhost:3000](http://localhost:3000).
 ### Docker (alternative)
 
 ```bash
-# Ensure .env has your Supabase keys and API keys
+# Ensure .env has your Supabase cloud keys and API keys
 docker compose up --build
 ```
 
-The frontend runs on port 3000, backend on port 8000. Docker uses `host.docker.internal` to reach Supabase on the host machine.
+The frontend runs on port 3000, backend on port 8000.
 
 ## Project Structure
 

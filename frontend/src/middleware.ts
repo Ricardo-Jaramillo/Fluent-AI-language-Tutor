@@ -22,11 +22,8 @@ export async function middleware(request: NextRequest) {
     return intlResponse;
   }
 
-  // Use SUPABASE_URL (runtime, for server-side/Docker) with fallback to NEXT_PUBLIC_ (build-time, for local dev)
-  const supabaseUrl =
-    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey =
-    process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!supabaseUrl || !supabaseKey) {
     return intlResponse;
@@ -36,15 +33,7 @@ export async function middleware(request: NextRequest) {
   const response = intlResponse || NextResponse.next({ request });
 
   try {
-    // When the server-side URL differs from the browser URL (e.g., Docker),
-    // the cookie name must match the browser-side Supabase client.
-    // Cookie name is derived from hostname: "sb-<host-first-part>-auth-token"
-    const browserUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL || supabaseUrl;
-    const storageKey = `sb-${new URL(browserUrl).hostname.split(".")[0]}-auth-token`;
-
     const supabase = createServerClient(supabaseUrl, supabaseKey, {
-      auth: { storageKey },
       cookies: {
         getAll() {
           return request.cookies.getAll();

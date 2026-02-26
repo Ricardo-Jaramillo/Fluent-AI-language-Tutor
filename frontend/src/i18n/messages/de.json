@@ -1,0 +1,104 @@
+{
+  "common": {
+    "appName": "Fluent",
+    "tagline": "Deutsch meistern durch Konversation",
+    "loading": "Laden...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "back": "Zuruck",
+    "next": "Weiter",
+    "start": "Starten",
+    "finish": "Beenden",
+    "error": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen"
+  },
+  "nav": {
+    "home": "Startseite",
+    "dashboard": "Dashboard",
+    "session": "Uben",
+    "settings": "Einstellungen",
+    "signOut": "Abmelden"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "displayName": "Anzeigename",
+    "noAccount": "Noch kein Konto?",
+    "hasAccount": "Bereits ein Konto?",
+    "forgotPassword": "Passwort vergessen?"
+  },
+  "landing": {
+    "hero": "Sprich Deutsch mit Selbstvertrauen",
+    "subtitle": "KI-gestutzte Konversationsubung von A1 bis C1",
+    "cta": "Loslegen",
+    "features": {
+      "chat": {
+        "title": "Freies Gesprach",
+        "description": "Naturliche Konversation auf deinem Niveau mit KI-Antworten in Echtzeit"
+      },
+      "correction": {
+        "title": "Echtzeit-Korrektur",
+        "description": "Sofortiges Feedback zu Grammatik und Aussprache"
+      },
+      "teaching": {
+        "title": "Gefuhrter Unterricht",
+        "description": "Strukturierte Lektionen nach einem umfassenden Lehrplan"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": "Willkommen bei Fluent!",
+    "selectLevel": "Was ist dein Deutschniveau?",
+    "selectModule": "Wahle ein Modul",
+    "selectTopic": "Wahle ein Thema",
+    "selectMode": "Wie mochtest du uben?",
+    "step": "Schritt",
+    "recommended": "Empfohlen"
+  },
+  "session": {
+    "startRecording": "Halten zum Sprechen",
+    "stopRecording": "Loslassen zum Stoppen",
+    "thinking": "Denke nach...",
+    "endSession": "Sitzung beenden",
+    "modes": {
+      "chat": "Freies Gesprach",
+      "correction": "Echtzeit-Korrektur",
+      "teaching": "Gefuhrter Unterricht"
+    },
+    "modeDescriptions": {
+      "chat": "Offene Konversationsubung auf deinem Niveau",
+      "correction": "Erhalte sofortige Korrekturen wahrend du sprichst",
+      "teaching": "Strukturierte Lektionen mit Vokabeln und Ubungen"
+    }
+  },
+  "dashboard": {
+    "title": "Dein Fortschritt",
+    "sessions": "Sitzungen",
+    "avgScore": "Durchschnittliche Bewertung",
+    "history": "Sitzungsverlauf",
+    "noSessions": "Noch keine Sitzungen",
+    "getStarted": "Starte deine erste Konversation, um deinen Fortschritt zu verfolgen",
+    "startFirst": "Erste Sitzung starten",
+    "newSession": "Neue Sitzung",
+    "fluency": "Flussigkeit",
+    "grammar": "Grammatik",
+    "pronunciation": "Aussprache"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache der Oberflache",
+    "llmProvider": "KI-Anbieter",
+    "theme": "Design",
+    "dark": "Dunkel",
+    "light": "Hell",
+    "system": "System",
+    "default": "Standard",
+    "languageChanged": "Sprache aktualisiert",
+    "providerChanged": "KI-Anbieter aktualisiert",
+    "dangerZone": "Gefahrenzone",
+    "dangerDescription": "Konto und alle Daten dauerhaft loschen. Diese Aktion kann nicht ruckgangig gemacht werden.",
+    "deleteAccount": "Konto loschen"
+  }
+}

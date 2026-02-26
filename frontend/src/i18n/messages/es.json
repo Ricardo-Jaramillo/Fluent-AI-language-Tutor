@@ -1,0 +1,104 @@
+{
+  "common": {
+    "appName": "Fluent",
+    "tagline": "Domina el aleman a traves de la conversacion",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Atras",
+    "next": "Siguiente",
+    "start": "Comenzar",
+    "finish": "Terminar",
+    "error": "Algo salio mal",
+    "retry": "Intentar de nuevo"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "session": "Practicar",
+    "settings": "Configuracion",
+    "signOut": "Cerrar sesion"
+  },
+  "auth": {
+    "signIn": "Iniciar sesion",
+    "signUp": "Registrarse",
+    "email": "Correo electronico",
+    "password": "Contrasena",
+    "displayName": "Nombre",
+    "noAccount": "No tienes cuenta?",
+    "hasAccount": "Ya tienes cuenta?",
+    "forgotPassword": "Olvidaste tu contrasena?"
+  },
+  "landing": {
+    "hero": "Habla aleman con confianza",
+    "subtitle": "Practica de conversacion con IA desde A1 hasta C1",
+    "cta": "Empezar",
+    "features": {
+      "chat": {
+        "title": "Chat libre",
+        "description": "Conversacion natural a tu nivel con respuestas de IA en tiempo real"
+      },
+      "correction": {
+        "title": "Correccion en tiempo real",
+        "description": "Retroalimentacion instantanea de gramatica y pronunciacion"
+      },
+      "teaching": {
+        "title": "Ensenanza guiada",
+        "description": "Lecciones estructuradas siguiendo un programa completo"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": "Bienvenido a Fluent!",
+    "selectLevel": "Cual es tu nivel de aleman?",
+    "selectModule": "Elige un modulo",
+    "selectTopic": "Elige un tema",
+    "selectMode": "Como quieres practicar?",
+    "step": "Paso",
+    "recommended": "Recomendado"
+  },
+  "session": {
+    "startRecording": "Manten para hablar",
+    "stopRecording": "Suelta para detener",
+    "thinking": "Pensando...",
+    "endSession": "Finalizar sesion",
+    "modes": {
+      "chat": "Chat libre",
+      "correction": "Correccion en tiempo real",
+      "teaching": "Ensenanza guiada"
+    },
+    "modeDescriptions": {
+      "chat": "Practica de conversacion abierta a tu nivel",
+      "correction": "Recibe correcciones instantaneas mientras hablas",
+      "teaching": "Lecciones estructuradas con vocabulario y ejercicios"
+    }
+  },
+  "dashboard": {
+    "title": "Tu progreso",
+    "sessions": "Sesiones",
+    "avgScore": "Puntuacion promedio",
+    "history": "Historial de sesiones",
+    "noSessions": "Sin sesiones aun",
+    "getStarted": "Inicia tu primera conversacion para seguir tu progreso",
+    "startFirst": "Iniciar primera sesion",
+    "newSession": "Nueva sesion",
+    "fluency": "Fluidez",
+    "grammar": "Gramatica",
+    "pronunciation": "Pronunciacion"
+  },
+  "settings": {
+    "title": "Configuracion",
+    "language": "Idioma de la interfaz",
+    "llmProvider": "Proveedor de IA",
+    "theme": "Tema",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "system": "Sistema",
+    "default": "Por defecto",
+    "languageChanged": "Idioma actualizado",
+    "providerChanged": "Proveedor de IA actualizado",
+    "dangerZone": "Zona de peligro",
+    "dangerDescription": "Eliminar permanentemente tu cuenta y todos los datos. Esta accion no se puede deshacer.",
+    "deleteAccount": "Eliminar cuenta"
+  }
+}

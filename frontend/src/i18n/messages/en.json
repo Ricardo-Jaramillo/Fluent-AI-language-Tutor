@@ -1,0 +1,104 @@
+{
+  "common": {
+    "appName": "Fluent",
+    "tagline": "Master German through conversation",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "start": "Start",
+    "finish": "Finish",
+    "error": "Something went wrong",
+    "retry": "Try again"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "session": "Practice",
+    "settings": "Settings",
+    "signOut": "Sign Out"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "displayName": "Display Name",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?"
+  },
+  "landing": {
+    "hero": "Speak German with Confidence",
+    "subtitle": "AI-powered conversation practice from A1 to C1",
+    "cta": "Get Started",
+    "features": {
+      "chat": {
+        "title": "Free Chat",
+        "description": "Natural conversation practice at your level with real-time AI responses"
+      },
+      "correction": {
+        "title": "Real-Time Correction",
+        "description": "Instant grammar and pronunciation feedback as you speak"
+      },
+      "teaching": {
+        "title": "Guided Teaching",
+        "description": "Structured lessons following a comprehensive syllabus"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": "Welcome to Fluent!",
+    "selectLevel": "What's your German level?",
+    "selectModule": "Choose a module",
+    "selectTopic": "Choose a topic",
+    "selectMode": "How do you want to practice?",
+    "step": "Step",
+    "recommended": "Recommended"
+  },
+  "session": {
+    "startRecording": "Hold to speak",
+    "stopRecording": "Release to stop",
+    "thinking": "Thinking...",
+    "endSession": "End Session",
+    "modes": {
+      "chat": "Free Chat",
+      "correction": "Real-Time Correction",
+      "teaching": "Guided Teaching"
+    },
+    "modeDescriptions": {
+      "chat": "Open-ended conversation practice at your level",
+      "correction": "Get instant corrections as you speak",
+      "teaching": "Structured lessons with vocabulary and exercises"
+    }
+  },
+  "dashboard": {
+    "title": "Your Progress",
+    "sessions": "Sessions",
+    "avgScore": "Average Score",
+    "history": "Session History",
+    "noSessions": "No sessions yet",
+    "getStarted": "Start your first conversation to track your progress",
+    "startFirst": "Start First Session",
+    "newSession": "New Session",
+    "fluency": "Fluency",
+    "grammar": "Grammar",
+    "pronunciation": "Pronunciation"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Interface Language",
+    "llmProvider": "AI Provider",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System",
+    "default": "Default",
+    "languageChanged": "Language updated",
+    "providerChanged": "AI provider updated",
+    "dangerZone": "Danger Zone",
+    "dangerDescription": "Permanently delete your account and all data. This action cannot be undone.",
+    "deleteAccount": "Delete Account"
+  }
+}

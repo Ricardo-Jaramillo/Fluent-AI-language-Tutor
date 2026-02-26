@@ -1,0 +1,14 @@
+node_modules
+.next
+.venv
+__pycache__
+*.pyc
+.git
+.claude
+.playwright-mcp
+.DS_Store
+backend/models
+.env
+.env.local
+.env.*.local
+docs

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { pageTransition, pageTransitionConfig } from "@/lib/animations";
+import { pageTransition, gentle } from "@/lib/animations";
 
 interface AnimatedPageProps {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ export default function AnimatedPage({ children, className = "" }: AnimatedPageP
       initial="initial"
       animate="animate"
       exit="exit"
-      transition={pageTransitionConfig}
+      transition={gentle}
       className={className}
     >
       {children}

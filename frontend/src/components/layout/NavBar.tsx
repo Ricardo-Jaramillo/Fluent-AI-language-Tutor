@@ -24,7 +24,6 @@ export default function NavBar() {
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
-  // Close lang dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (langRef.current && !langRef.current.contains(e.target as Node)) {
@@ -53,25 +52,35 @@ export default function NavBar() {
   ];
 
   return (
-    <header className="sticky top-0 border-b border-border bg-background/80 backdrop-blur-md" style={{ zIndex: "var(--z-sticky)" }}>
+    <header
+      className="sticky top-0 border-b border-border bg-[var(--bg-base)]/80 backdrop-blur-xl"
+      style={{ zIndex: "var(--z-sticky)" }}
+    >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold gradient-text">
+        <Link href="/" className="text-xl font-bold gradient-text font-[family-name:var(--font-display)]">
           Fluent
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-all"
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </Link>
-          ))}
+          {navLinks.map(({ href, label, icon: Icon }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] text-sm transition-all duration-[var(--duration-fast)] ${
+                  isActive
+                    ? "text-primary-400 bg-primary-600/10"
+                    : "text-foreground/50 hover:text-foreground hover:bg-surface-elevated"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
 
           <div className="ml-2 h-6 w-px bg-border" />
 
@@ -79,7 +88,7 @@ export default function NavBar() {
           <div ref={langRef} className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[var(--radius-md)] text-xs font-medium text-foreground/50 hover:text-foreground hover:bg-surface-elevated transition-all"
               aria-label="Switch language"
             >
               <Globe className="h-3.5 w-3.5" />
@@ -92,7 +101,7 @@ export default function NavBar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -4, scale: 0.95 }}
                   transition={{ duration: 0.12 }}
-                  className="absolute right-0 top-full mt-1 bg-surface-elevated border border-border rounded-lg shadow-lg overflow-hidden"
+                  className="absolute right-0 top-full mt-1 bg-surface-elevated border border-border rounded-[var(--radius-md)] shadow-lg overflow-hidden"
                   style={{ zIndex: "var(--z-dropdown)" }}
                 >
                   {localeConfig.map(({ value, label }) => (
@@ -102,7 +111,7 @@ export default function NavBar() {
                       className={`flex items-center w-full px-4 py-2 text-xs font-medium transition-colors ${
                         locale === value
                           ? "text-primary-400 bg-primary-600/10"
-                          : "text-foreground/60 hover:text-foreground hover:bg-foreground/5"
+                          : "text-foreground/50 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {label}
@@ -117,7 +126,7 @@ export default function NavBar() {
 
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-all"
+            className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-md)] text-sm text-foreground/50 hover:text-foreground hover:bg-surface-elevated transition-all"
           >
             <LogOut className="h-4 w-4" />
             {t("signOut")}
@@ -127,13 +136,13 @@ export default function NavBar() {
           </div>
         </nav>
 
-        {/* Mobile hamburger */}
+        {/* Mobile right controls */}
         <div className="flex items-center gap-2 md:hidden">
           {/* Mobile language switcher */}
           <div ref={langRef} className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
-              className="flex items-center gap-1 p-2 rounded-lg text-xs font-medium text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-colors"
+              className="flex items-center gap-1 p-2 rounded-[var(--radius-md)] text-xs font-medium text-foreground/50 hover:text-foreground hover:bg-surface-elevated transition-colors"
               aria-label="Switch language"
             >
               <Globe className="h-4 w-4" />
@@ -146,7 +155,7 @@ export default function NavBar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -4, scale: 0.95 }}
                   transition={{ duration: 0.12 }}
-                  className="absolute right-0 top-full mt-1 bg-surface-elevated border border-border rounded-lg shadow-lg overflow-hidden"
+                  className="absolute right-0 top-full mt-1 bg-surface-elevated border border-border rounded-[var(--radius-md)] shadow-lg overflow-hidden"
                   style={{ zIndex: "var(--z-dropdown)" }}
                 >
                   {localeConfig.map(({ value, label }) => (
@@ -156,7 +165,7 @@ export default function NavBar() {
                       className={`flex items-center w-full px-4 py-2 text-xs font-medium transition-colors ${
                         locale === value
                           ? "text-primary-400 bg-primary-600/10"
-                          : "text-foreground/60 hover:text-foreground hover:bg-foreground/5"
+                          : "text-foreground/50 hover:text-foreground hover:bg-foreground/5"
                       }`}
                     >
                       {label}
@@ -169,7 +178,7 @@ export default function NavBar() {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 rounded-lg text-foreground/60 hover:text-foreground hover:bg-surface-elevated transition-colors"
+            className="p-2 rounded-[var(--radius-md)] text-foreground/50 hover:text-foreground hover:bg-surface-elevated transition-colors"
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -177,7 +186,7 @@ export default function NavBar() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile dropdown */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -197,23 +206,30 @@ export default function NavBar() {
               className="absolute left-0 right-0 top-14 border-b border-border bg-surface-elevated p-4 space-y-1 md:hidden"
               style={{ zIndex: "var(--z-overlay)" }}
             >
-              {navLinks.map(({ href, label, icon: Icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm text-foreground/70 hover:text-foreground hover:bg-foreground/5 transition-colors"
-                >
-                  <Icon className="h-5 w-5" />
-                  {label}
-                </Link>
-              ))}
+              {navLinks.map(({ href, label, icon: Icon }) => {
+                const isActive = pathname === href;
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] text-sm transition-colors ${
+                      isActive
+                        ? "text-primary-400 bg-primary-600/10 border-l-4 border-primary-500"
+                        : "text-foreground/60 hover:text-foreground hover:bg-foreground/5"
+                    }`}
+                  >
+                    <Icon className="h-5 w-5" />
+                    {label}
+                  </Link>
+                );
+              })}
               <button
                 onClick={() => {
                   setMobileOpen(false);
                   handleSignOut();
                 }}
-                className="flex w-full items-center gap-3 px-4 py-3 rounded-lg text-sm text-error/80 hover:text-error hover:bg-error/5 transition-colors"
+                className="flex w-full items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] text-sm text-error/70 hover:text-error hover:bg-error/5 transition-colors"
               >
                 <LogOut className="h-5 w-5" />
                 {t("signOut")}

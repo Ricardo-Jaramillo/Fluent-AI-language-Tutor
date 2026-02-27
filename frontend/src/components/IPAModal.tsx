@@ -1,7 +1,7 @@
 "use client";
 
 import { Modal, Badge, Button } from "@/components/ui";
-import { Volume2 } from "lucide-react";
+import { Volume2, X } from "lucide-react";
 
 interface IPAModalProps {
   isOpen: boolean;
@@ -13,10 +13,10 @@ interface IPAModalProps {
   severity: "minor" | "moderate" | "severe";
 }
 
-const severityVariant = {
-  minor: "warning" as const,
-  moderate: "warning" as const,
-  severe: "error" as const,
+const severityConfig = {
+  minor: { variant: "info" as const, label: "Minor" },
+  moderate: { variant: "warning" as const, label: "Moderate" },
+  severe: { variant: "error" as const, label: "Severe" },
 };
 
 export default function IPAModal({
@@ -28,27 +28,39 @@ export default function IPAModal({
   explanation,
   severity,
 }: IPAModalProps) {
+  const config = severityConfig[severity];
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="sm" title={word}>
-      <div className="space-y-4">
-        <Badge variant={severityVariant[severity]} size="md">
-          {severity}
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="sm"
+      title={word}
+    >
+      <div className="space-y-4" aria-label={`Pronunciation details for ${word}`}>
+        <Badge variant={config.variant} size="md">
+          {config.label}
         </Badge>
 
-        <div className="space-y-2 p-3 rounded-lg bg-surface">
+        <div className="space-y-3 p-4 rounded-[var(--radius-md)] bg-[var(--bg-surface)]">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-foreground/50">You said:</span>
-            <span className="font-mono text-error">{spokenIPA}</span>
+            <span className="text-foreground/40">You said</span>
+            <span className="font-[family-name:var(--font-mono)] text-[var(--accent-coral)] text-[var(--text-ipa)]">
+              {spokenIPA}
+            </span>
           </div>
+          <div className="h-px bg-border" />
           <div className="flex justify-between items-center text-sm">
-            <span className="text-foreground/50">Correct:</span>
-            <span className="font-mono text-success">{correctIPA}</span>
+            <span className="text-foreground/40">Target</span>
+            <span className="font-[family-name:var(--font-mono)] text-success text-[var(--text-ipa)]">
+              {correctIPA}
+            </span>
           </div>
         </div>
 
-        <p className="text-sm text-foreground/70 leading-relaxed">{explanation}</p>
+        <p className="text-sm text-foreground/60 leading-relaxed">{explanation}</p>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button
             variant="outline"
             size="sm"
@@ -57,7 +69,13 @@ export default function IPAModal({
           >
             Listen
           </Button>
-          <Button variant="secondary" size="sm" onClick={onClose} className="flex-1">
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={<X className="h-4 w-4" />}
+            onClick={onClose}
+            className="flex-1"
+          >
             Close
           </Button>
         </div>

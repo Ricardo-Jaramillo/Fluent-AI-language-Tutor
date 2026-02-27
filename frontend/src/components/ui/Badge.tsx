@@ -3,14 +3,21 @@
 const variantStyles = {
   default: "bg-foreground/10 text-foreground/70",
   primary: "bg-primary-500/15 text-primary-400",
-  success: "bg-success/15 text-success",
-  warning: "bg-warning/15 text-warning",
-  error: "bg-error/15 text-error",
+  success: "bg-[hsl(152,55%,48%)]/15 text-[hsl(152,55%,48%)]",
+  warning: "bg-[hsl(38,85%,55%)]/15 text-[hsl(38,85%,55%)]",
+  error: "bg-[hsl(0,72%,58%)]/15 text-[hsl(0,72%,58%)]",
+  info: "bg-[hsl(210,65%,55%)]/15 text-[hsl(210,65%,55%)]",
+  /* Level badges per Section 25 */
+  "level-a1": "bg-[hsl(152,55%,48%)]/15 text-[hsl(152,55%,48%)]",
+  "level-a2": "bg-[hsl(168,45%,42%)]/15 text-[hsl(168,45%,42%)]",
+  "level-b1": "bg-[hsl(210,65%,55%)]/15 text-[hsl(210,65%,55%)]",
+  "level-b2": "bg-[hsl(232,50%,55%)]/15 text-[hsl(232,50%,55%)]",
+  "level-c1": "bg-[hsl(38,90%,58%)]/15 text-[hsl(38,90%,58%)]",
 } as const;
 
 const sizeStyles = {
-  sm: "px-2 py-0.5 text-xs",
-  md: "px-2.5 py-1 text-xs",
+  sm: "px-2 py-0.5 text-[var(--text-caption)]",
+  md: "px-3 py-1 text-[var(--text-caption)]",
 } as const;
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {

@@ -1,34 +1,51 @@
+/* === FONTS — must precede all other rules === */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @import "tailwindcss";
 
 :root {
-  /* Primary — Teal/Emerald (German forest) */
-  --primary-50: #ecfdf5;
-  --primary-100: #d1fae5;
-  --primary-200: #a7f3d0;
-  --primary-300: #6ee7b7;
-  --primary-400: #34d399;
-  --primary-500: #10b981;
-  --primary-600: #059669;
-  --primary-700: #047857;
-  --primary-800: #065f46;
-  --primary-900: #064e3b;
-  --primary-950: #022c22;
+  /* === FOUNDATION — Background layers with warm undertones === */
+  --bg-deepest:    hsl(200, 15%, 5%);
+  --bg-base:       hsl(195, 12%, 8%);
+  --bg-elevated:   hsl(192, 10%, 11%);
+  --bg-surface:    hsl(190, 8%, 14%);
+  --bg-overlay:    hsl(188, 8%, 17%);
 
-  /* Accent — Violet */
-  --accent-50: #f5f3ff;
-  --accent-100: #ede9fe;
-  --accent-200: #ddd6fe;
-  --accent-300: #c4b5fd;
-  --accent-400: #a78bfa;
-  --accent-500: #8b5cf6;
-  --accent-600: #7c3aed;
-  --accent-700: #6d28d9;
-  --accent-800: #5b21b6;
-  --accent-900: #4c1d95;
-  --accent-950: #2e1065;
+  /* === PRIMARY — German Forest Green === */
+  --primary-50:  hsl(150, 55%, 94%);
+  --primary-100: hsl(150, 55%, 90%);
+  --primary-200: hsl(152, 52%, 78%);
+  --primary-300: hsl(154, 50%, 65%);
+  --primary-400: hsl(156, 48%, 52%);
+  --primary-500: hsl(158, 45%, 42%);
+  --primary-600: hsl(160, 40%, 32%);
+  --primary-700: hsl(162, 42%, 24%);
+  --primary-800: hsl(162, 45%, 18%);
+  --primary-900: hsl(162, 50%, 12%);
+  --primary-950: hsl(162, 50%, 7%);
+
+  /* === ACCENT — Warm amber counterpoint === */
+  --accent-warm:   hsl(38, 90%, 58%);
+  --accent-coral:  hsl(12, 80%, 62%);
+  --accent-sky:    hsl(210, 70%, 60%);
+
+  /* Legacy accent scale (for existing Tailwind references) */
+  --accent-50:  hsl(38, 90%, 96%);
+  --accent-100: hsl(38, 88%, 90%);
+  --accent-200: hsl(38, 85%, 80%);
+  --accent-300: hsl(38, 82%, 70%);
+  --accent-400: hsl(38, 90%, 58%);
+  --accent-500: hsl(38, 85%, 50%);
+  --accent-600: hsl(38, 80%, 42%);
+  --accent-700: hsl(38, 75%, 34%);
+  --accent-800: hsl(38, 70%, 26%);
+  --accent-900: hsl(38, 65%, 18%);
+  --accent-950: hsl(38, 60%, 10%);
 
   /* Neutral scale */
-  --neutral-50: #fafafa;
+  --neutral-50:  #fafafa;
   --neutral-100: #f5f5f5;
   --neutral-200: #e5e5e5;
   --neutral-300: #d4d4d4;
@@ -40,61 +57,104 @@
   --neutral-900: #171717;
   --neutral-950: #0a0a0a;
 
-  /* Semantic colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
+  /* === SEMANTIC === */
+  --success:  hsl(152, 55%, 48%);
+  --warning:  hsl(38, 85%, 55%);
+  --error:    hsl(0, 72%, 58%);
+  --info:     hsl(210, 65%, 55%);
 
-  /* Surfaces (dark mode default) */
-  --background: #050a09;
-  --foreground: #ecfdf5;
-  --surface: #0d1a16;
-  --surface-elevated: #132922;
-  --border: rgba(16, 185, 129, 0.12);
-  --border-strong: rgba(16, 185, 129, 0.25);
+  /* === SURFACES (dark mode) === */
+  --background:        var(--bg-base);
+  --foreground:        hsl(0, 0%, 95%);
+  --surface:           var(--bg-surface);
+  --surface-elevated:  var(--bg-elevated);
+  --border:            hsla(195, 10%, 50%, 0.10);
+  --border-strong:     hsla(195, 10%, 50%, 0.20);
 
-  /* Typography */
-  --font-display: 3rem;
-  --font-h1: 2.25rem;
-  --font-h2: 1.875rem;
-  --font-h3: 1.5rem;
-  --font-h4: 1.25rem;
-  --font-body-lg: 1.125rem;
-  --font-body: 1rem;
-  --font-caption: 0.875rem;
-  --font-overline: 0.75rem;
+  /* === TEXT === */
+  --text-primary:   hsl(0, 0%, 95%);
+  --text-secondary: hsl(195, 8%, 65%);
+  --text-tertiary:  hsl(195, 6%, 45%);
+  --text-muted:     hsl(195, 5%, 32%);
+  --text-on-primary: hsl(162, 50%, 8%);
 
-  /* Border radius */
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
+  /* === FONT FAMILIES === */
+  --font-display: 'Satoshi', sans-serif;
+  --font-body: 'General Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* === TYPE SCALE === */
+  --text-hero:    3.5rem;
+  --text-h1:      2.25rem;
+  --text-h2:      1.5rem;
+  --text-h3:      1.125rem;
+  --text-body:    1rem;
+  --text-body-sm: 0.875rem;
+  --text-caption: 0.75rem;
+  --text-ipa:     1.125rem;
+
+  /* === BORDER RADIUS === */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
-  --glow-primary: 0 0 20px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
-  --glow-accent: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
+  /* === SPACING (4px base grid) === */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  /* Z-index scale */
+  /* === SHADOWS — Layered, atmospheric === */
+  --shadow-sm:   0 1px 2px hsla(200, 20%, 2%, 0.3);
+  --shadow-md:   0 4px 12px hsla(200, 20%, 2%, 0.4), 0 1px 3px hsla(200, 20%, 2%, 0.2);
+  --shadow-lg:   0 8px 32px hsla(200, 20%, 2%, 0.5), 0 2px 8px hsla(200, 20%, 2%, 0.3);
+  --shadow-xl:   0 20px 40px hsla(200, 20%, 2%, 0.6), 0 4px 12px hsla(200, 20%, 2%, 0.3);
+  --shadow-glow: 0 0 20px hsla(158, 50%, 42%, 0.15);
+  --glow-primary: 0 0 20px hsla(158, 45%, 42%, 0.25), 0 0 40px hsla(158, 45%, 42%, 0.08);
+  --glow-accent:  0 0 20px hsla(38, 90%, 58%, 0.25), 0 0 40px hsla(38, 90%, 58%, 0.08);
+
+  /* === GLASS === */
+  --glass-bg:     hsla(192, 12%, 12%, 0.70);
+  --glass-border: hsla(195, 20%, 60%, 0.08);
+  --glass-blur:   12px;
+
+  /* === Z-INDEX SCALE === */
+  --z-base:     1;
   --z-dropdown: 10;
-  --z-sticky: 20;
-  --z-overlay: 30;
-  --z-modal: 40;
-  --z-toast: 50;
+  --z-sticky:   20;
+  --z-overlay:  30;
+  --z-modal:    40;
+  --z-toast:    50;
+  --z-mic:      60;
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
-  --transition-slow: 300ms ease;
+  /* === TRANSITIONS === */
+  --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:   150ms;
+  --duration-normal: 250ms;
+  --duration-slow:   400ms;
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
   --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* === LEVEL BADGE COLORS === */
+  --level-a1: hsl(152, 55%, 48%);
+  --level-a2: hsl(168, 45%, 42%);
+  --level-b1: hsl(210, 65%, 55%);
+  --level-b2: hsl(232, 50%, 55%);
+  --level-c1: hsl(38, 90%, 58%);
 }
 
+/* === TAILWIND THEME BRIDGE === */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -139,33 +199,60 @@
   --shadow-glow-primary: var(--glow-primary);
   --shadow-glow-accent: var(--glow-accent);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 }
 
+/* === BASE STYLES === */
 body {
-  background: var(--background);
+  background: var(--bg-base);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Glass morphism */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.2;
+}
+
+/* === ATMOSPHERIC BACKGROUND === */
+.app-background {
+  background-color: var(--bg-base);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+    radial-gradient(
+      ellipse 60% 50% at 50% 30%,
+      hsla(162, 30%, 15%, 0.25) 0%,
+      transparent 70%
+    ),
+    linear-gradient(
+      to top,
+      hsla(38, 20%, 10%, 0.08) 0%,
+      transparent 30%
+    );
+}
+
+/* === GLASS MORPHISM === */
 .glass {
-  background: rgba(13, 26, 22, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
 }
 
-/* Gradient text */
+/* === GRADIENT TEXT === */
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary-400), var(--accent-400));
+  background: linear-gradient(135deg, var(--primary-400), var(--accent-warm));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Noise texture overlay */
+/* === NOISE TEXTURE OVERLAY === */
 .noise-bg {
   position: relative;
 }
@@ -179,7 +266,50 @@ body {
   z-index: 0;
 }
 
-/* Scrollbar styling */
+/* === SKELETON SHIMMER === */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-surface) 0%,
+    var(--bg-overlay) 50%,
+    var(--bg-surface) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* === MIC BUTTON GLOW === */
+@keyframes mic-breathe {
+  0%, 100% { transform: scale(1); box-shadow: var(--shadow-glow); }
+  50% { transform: scale(1.02); box-shadow: 0 0 28px hsla(158, 50%, 42%, 0.25); }
+}
+
+.mic-idle {
+  animation: mic-breathe 3s ease-in-out infinite;
+}
+
+/* === TOAST PROGRESS BAR === */
+@keyframes toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+.toast-progress {
+  animation: toast-progress 4s linear forwards;
+}
+
+/* === FOCUS RING === */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--primary-400);
+  outline-offset: 2px;
+}
+
+/* === SCROLLBAR STYLING === */
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -197,7 +327,7 @@ body {
   background: var(--primary-700);
 }
 
-/* Reduced motion support */
+/* === REDUCED MOTION === */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -205,5 +335,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .mic-idle {
+    animation: none;
   }
 }

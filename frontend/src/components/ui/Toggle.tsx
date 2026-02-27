@@ -21,8 +21,8 @@ export default function Toggle({
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-[var(--transition-base)] ${
-          checked ? "bg-primary-600" : "bg-foreground/20"
+        className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-[var(--duration-normal)] focus-visible:outline-2 focus-visible:outline-primary-400 focus-visible:outline-offset-2 ${
+          checked ? "bg-primary-600" : "bg-foreground/15"
         }`}
       >
         <motion.span
@@ -33,7 +33,7 @@ export default function Toggle({
           }`}
         />
       </button>
-      {label && <span className="text-sm text-foreground/80">{label}</span>}
+      {label && <span className="text-sm text-foreground/70">{label}</span>}
     </label>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
+import { AlertCircle } from "lucide-react";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -14,11 +15,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
     return (
-      <div className="space-y-1.5">
+      <div className="flex flex-col gap-1">
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-foreground/80"
+            className="text-[var(--text-body-sm)] font-medium text-foreground/65"
           >
             {label}
           </label>
@@ -32,19 +33,34 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
-            className={`w-full rounded-lg border bg-surface px-4 py-2.5 text-foreground placeholder:text-foreground/30 transition-all duration-[var(--transition-base)] focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 ${
+            className={`w-full rounded-[var(--radius-md)] border bg-surface px-4 py-2.5 text-foreground placeholder:text-foreground/25 transition-all duration-[var(--duration-normal)] focus:outline-none focus:ring-2 focus:border-primary-500 ${
               leftIcon ? "pl-10" : ""
             } ${
               error
-                ? "border-error focus:ring-error/50 focus:border-error"
-                : "border-border hover:border-border-strong"
+                ? "border-error/60 focus:ring-error/30 focus:border-error"
+                : "border-border hover:border-border-strong focus:ring-primary-500/30"
             } ${className}`}
+            aria-invalid={error ? "true" : undefined}
+            aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
             {...props}
           />
         </div>
-        {error && <p className="text-sm text-error">{error}</p>}
+        {error && (
+          <p
+            id={`${inputId}-error`}
+            className="flex items-center gap-1.5 text-sm text-error animate-[fadeSlideDown_200ms_ease-out]"
+          >
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+            {error}
+          </p>
+        )}
         {helperText && !error && (
-          <p className="text-sm text-foreground/40">{helperText}</p>
+          <p
+            id={`${inputId}-helper`}
+            className="text-xs text-foreground/35"
+          >
+            {helperText}
+          </p>
         )}
       </div>
     );

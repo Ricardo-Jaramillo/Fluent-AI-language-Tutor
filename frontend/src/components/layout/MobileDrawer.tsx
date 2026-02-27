@@ -49,14 +49,18 @@ export default function MobileDrawer({
             animate={{ x: 0 }}
             exit={slideFrom}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`fixed top-0 ${side}-0 bottom-0 w-80 max-w-[85vw] bg-surface-elevated border-${side === "right" ? "l" : "r"} border-border overflow-y-auto lg:hidden ${className}`}
+            className={`fixed top-0 ${side}-0 bottom-0 w-[280px] max-w-[85vw] glass border-${side === "right" ? "l" : "r"} border-border overflow-y-auto lg:hidden ${className}`}
             style={{ zIndex: "var(--z-modal)" }}
           >
             <div className="flex items-center justify-between p-4 border-b border-border">
-              {title && <h3 className="font-semibold">{title}</h3>}
+              {title && (
+                <h3 className="font-semibold font-[family-name:var(--font-display)] text-foreground/90">
+                  {title}
+                </h3>
+              )}
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-foreground/60 hover:text-foreground hover:bg-foreground/5 transition-colors ml-auto"
+                className="p-1.5 rounded-[var(--radius-sm)] text-foreground/40 hover:text-foreground hover:bg-foreground/5 transition-colors ml-auto"
                 aria-label="Close drawer"
               >
                 <X className="h-5 w-5" />

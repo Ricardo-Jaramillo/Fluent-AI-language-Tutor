@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 
 const colorStyles = {
-  primary: "bg-primary-500",
-  accent: "bg-accent-500",
+  primary: "bg-primary-400",
+  accent: "bg-accent-400",
   success: "bg-success",
   warning: "bg-warning",
   error: "bg-error",
@@ -16,6 +16,7 @@ interface ProgressBarProps {
   max?: number;
   color?: keyof typeof colorStyles;
   showLabel?: boolean;
+  thin?: boolean;
   className?: string;
 }
 
@@ -24,22 +25,24 @@ export default function ProgressBar({
   max = 100,
   color = "primary",
   showLabel = false,
+  thin = false,
   className = "",
 }: ProgressBarProps) {
   const percent = Math.min(Math.max((value / max) * 100, 0), 100);
+  const height = thin ? "h-1" : "h-2";
 
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="flex-1 h-2 rounded-full bg-foreground/10 overflow-hidden">
+    <div className={`flex items-center gap-3 ${className}`} role="progressbar" aria-valuenow={Math.round(percent)} aria-valuemin={0} aria-valuemax={100}>
+      <div className={`flex-1 ${height} rounded-full bg-foreground/8 overflow-hidden`}>
         <motion.div
           className={`h-full rounded-full ${colorStyles[color]}`}
           initial={{ width: 0 }}
           animate={{ width: `${percent}%` }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
       {showLabel && (
-        <span className="text-xs font-medium text-foreground/60 tabular-nums w-10 text-right">
+        <span className="text-xs font-medium text-foreground/50 tabular-nums w-10 text-right">
           {Math.round(percent)}%
         </span>
       )}

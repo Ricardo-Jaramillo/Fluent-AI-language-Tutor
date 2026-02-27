@@ -17,9 +17,9 @@ export default function Sidebar({ title, children, className = "" }: SidebarProp
     <>
       {/* Desktop sidebar */}
       <aside
-        className={`hidden lg:flex lg:flex-col w-72 border-l border-border overflow-y-auto p-4 ${className}`}
+        className={`hidden lg:flex lg:flex-col w-[320px] border-l border-border overflow-y-auto p-4 bg-[var(--bg-elevated)] ${className}`}
       >
-        <h3 className="text-sm font-medium text-foreground/50 mb-3 uppercase tracking-wider">
+        <h3 className="text-xs font-semibold text-foreground/40 mb-4 uppercase tracking-widest font-[family-name:var(--font-display)]">
           {title}
         </h3>
         {children}
@@ -32,7 +32,7 @@ export default function Sidebar({ title, children, className = "" }: SidebarProp
         style={{ zIndex: "var(--z-dropdown)" }}
         aria-label={`Open ${title}`}
       >
-        <PanelRightOpen className="h-5 w-5 text-foreground/60" />
+        <PanelRightOpen className="h-5 w-5 text-foreground/50" />
       </button>
 
       {/* Mobile drawer */}

@@ -1,5 +1,7 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 const variantStyles = {
   elevated: "bg-surface-elevated border border-border shadow-md",
   outlined: "border border-border bg-transparent",
@@ -13,22 +15,35 @@ const paddingStyles = {
   lg: "p-8",
 } as const;
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CardProps {
   variant?: keyof typeof variantStyles;
   padding?: keyof typeof paddingStyles;
+  hoverable?: boolean;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export default function Card({
   variant = "elevated",
   padding = "md",
+  hoverable = false,
   className = "",
   children,
-  ...props
 }: CardProps) {
+  if (hoverable) {
+    return (
+      <motion.div
+        whileHover={{ y: -2, transition: { duration: 0.25, ease: [0.16, 1, 0.3, 1] } }}
+        className={`rounded-[var(--radius-lg)] transition-shadow duration-[var(--duration-normal)] hover:shadow-lg hover:border-border-strong ${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <div
-      className={`rounded-xl ${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}
-      {...props}
+      className={`rounded-[var(--radius-lg)] ${variantStyles[variant]} ${paddingStyles[padding]} ${className}`}
     >
       {children}
     </div>

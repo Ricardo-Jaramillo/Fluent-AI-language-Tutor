@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import IPAModal from "./IPAModal";
-import { messageBubble } from "@/lib/animations";
+import { messageBubble, messageBubbleConfig } from "@/lib/animations";
 
 interface PronunciationError {
   word: string;
@@ -38,11 +38,11 @@ export default function MessageBubble({
         variants={messageBubble}
         initial="initial"
         animate="animate"
-        transition={{ duration: 0.25, ease: "easeOut" }}
-        className={`max-w-[80%] p-3 rounded-2xl ${
+        transition={messageBubbleConfig}
+        className={`max-w-[80%] md:max-w-[80%] p-3.5 ${
           role === "user"
-            ? "ml-auto bg-primary-600 text-white rounded-br-md"
-            : "mr-auto bg-surface-elevated border border-border rounded-bl-md"
+            ? "ml-auto bg-gradient-to-br from-primary-800 to-primary-700 text-white rounded-2xl rounded-br-sm"
+            : "mr-auto bg-[var(--bg-elevated)] border border-border text-foreground rounded-2xl rounded-bl-sm"
         }`}
       >
         {role === "user" && errors.length > 0 ? (
@@ -54,7 +54,8 @@ export default function MessageBubble({
                   <span key={i}>
                     <button
                       onClick={() => setSelectedError(error)}
-                      className="underline decoration-error decoration-wavy cursor-pointer hover:bg-white/20 rounded px-0.5 transition-colors"
+                      className="underline decoration-[var(--accent-coral)] decoration-dotted underline-offset-4 cursor-pointer hover:bg-white/15 rounded px-0.5 transition-colors"
+                      aria-label={`Pronunciation issue with ${word}`}
                     >
                       {word}
                     </button>{" "}

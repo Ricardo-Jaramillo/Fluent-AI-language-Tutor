@@ -39,6 +39,8 @@ export default function Tooltip({
       className={`relative inline-flex ${className}`}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
+      onFocus={() => setShow(true)}
+      onBlur={() => setShow(false)}
     >
       {children}
       <AnimatePresence>
@@ -49,7 +51,7 @@ export default function Tooltip({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.12 }}
             style={{ transformOrigin: originMap[position] }}
-            className={`absolute ${positionStyles[position]} px-2.5 py-1.5 text-xs font-medium bg-neutral-800 text-neutral-100 rounded-lg whitespace-nowrap pointer-events-none shadow-lg`}
+            className={`absolute ${positionStyles[position]} px-3 py-2 text-xs font-medium bg-[var(--bg-overlay)] backdrop-blur-lg border border-border text-foreground/90 rounded-[var(--radius-md)] whitespace-nowrap pointer-events-none shadow-lg max-w-[260px]`}
             role="tooltip"
           >
             {content}

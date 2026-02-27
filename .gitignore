@@ -40,3 +40,4 @@ supabase/.temp/
 # Claude
 .claude/
 .playwright-mcp/
+playwright/

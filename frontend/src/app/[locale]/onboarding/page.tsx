@@ -7,8 +7,8 @@ import { useSessionStore } from "@/stores/session";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, Pencil, BookOpen, ArrowLeft, ChevronRight } from "lucide-react";
 import { ProgressBar, Badge } from "@/components/ui";
-import NavBar from "@/components/layout/NavBar";
 import AnimatedPage from "@/components/AnimatedPage";
+import { gentle } from "@/lib/animations";
 import syllabus from "@/data/syllabus.json";
 
 const levels = ["A1", "A2", "B1", "B2", "C1"] as const;
@@ -21,12 +21,20 @@ const levelDescriptions: Record<string, string> = {
   C1: "Advanced",
 };
 
-const levelColors: Record<string, string> = {
-  A1: "bg-primary-600/20 border-primary-500/30 text-primary-400",
-  A2: "bg-primary-600/15 border-primary-500/25 text-primary-400",
-  B1: "bg-accent-600/20 border-accent-500/30 text-accent-400",
-  B2: "bg-accent-600/15 border-accent-500/25 text-accent-400",
-  C1: "bg-warning/20 border-warning/30 text-warning",
+const levelExamples: Record<string, string> = {
+  A1: '"Hallo, ich heiße Maria"',
+  A2: '"Gestern bin ich ins Kino gegangen"',
+  B1: '"Meiner Meinung nach sollten wir..."',
+  B2: '"Es wäre sinnvoll, wenn wir darüber nachdenken würden"',
+  C1: '"Inwiefern lässt sich argumentieren, dass..."',
+};
+
+const levelBadgeVariants: Record<string, "level-a1" | "level-a2" | "level-b1" | "level-b2" | "level-c1"> = {
+  A1: "level-a1",
+  A2: "level-a2",
+  B1: "level-b1",
+  B2: "level-b2",
+  C1: "level-c1",
 };
 
 const modeConfig = [
@@ -72,14 +80,13 @@ export default function OnboardingPage() {
 
   return (
     <AnimatedPage>
-      <NavBar />
-      <div className="flex items-center justify-center min-h-[calc(100vh-57px)] px-4">
+      <div className="flex items-center justify-center min-h-screen px-4 app-background">
         <div className="w-full max-w-lg space-y-6">
-          {/* Progress bar */}
-          <ProgressBar value={(step + 1) * 25} color="primary" />
+          {/* Progress */}
+          <ProgressBar value={(step + 1) * 25} color="primary" thin />
 
           {/* Step indicator */}
-          <div className="flex items-center gap-2 text-sm text-foreground/40">
+          <div className="flex items-center gap-2 text-sm text-foreground/30">
             <span>{t("step")} {step + 1}/4</span>
           </div>
 
@@ -93,11 +100,12 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.25 }}
+                transition={gentle}
                 className="space-y-4"
               >
-                <h1 className="text-2xl font-bold">{t("welcome")}</h1>
-                <h2 className="text-lg text-foreground/70">{t("selectLevel")}</h2>
+                <h1 className="text-2xl font-bold font-[family-name:var(--font-display)]">{t("welcome")}</h1>
+                <h2 className="text-lg text-foreground/60">{t("selectLevel")}</h2>
+                <p className="text-sm text-foreground/30">Pick the level that matches how you feel right now.</p>
                 <div className="grid grid-cols-1 gap-3">
                   {levels.map((level) => (
                     <motion.button
@@ -107,17 +115,20 @@ export default function OnboardingPage() {
                         session.setLevel(level);
                         goForward(1);
                       }}
-                      className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
+                      className={`flex items-center justify-between p-4 rounded-[var(--radius-lg)] border transition-all ${
                         session.level === level
-                          ? levelColors[level]
-                          : "border-border hover:border-border-strong bg-surface"
+                          ? "border-primary-500/40 bg-primary-600/10"
+                          : "border-border hover:border-border-strong bg-[var(--bg-surface)]"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="text-lg font-bold">{level}</span>
-                        <span className="text-sm text-foreground/50">{levelDescriptions[level]}</span>
+                      <div className="flex items-center gap-3 text-left">
+                        <Badge variant={levelBadgeVariants[level]} size="md">{level}</Badge>
+                        <div>
+                          <span className="text-sm font-medium">{levelDescriptions[level]}</span>
+                          <p className="text-xs text-foreground/30 mt-0.5 italic">{levelExamples[level]}</p>
+                        </div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-foreground/30" />
+                      <ChevronRight className="h-4 w-4 text-foreground/20 shrink-0" />
                     </motion.button>
                   ))}
                 </div>
@@ -133,10 +144,10 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.25 }}
+                transition={gentle}
                 className="space-y-4"
               >
-                <h2 className="text-lg font-semibold">{t("selectModule")}</h2>
+                <h2 className="text-lg font-semibold font-[family-name:var(--font-display)]">{t("selectModule")}</h2>
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
                   {selectedLevel.modules.map((mod, i) => (
                     <motion.button
@@ -149,19 +160,19 @@ export default function OnboardingPage() {
                         session.setModule(mod.id);
                         goForward(2);
                       }}
-                      className="w-full flex items-center gap-3 p-4 rounded-xl border border-border hover:border-border-strong bg-surface text-left transition-all"
+                      className="w-full flex items-center gap-3 p-4 rounded-[var(--radius-lg)] border border-border hover:border-border-strong bg-[var(--bg-surface)] text-left transition-all"
                     >
-                      <div className="w-1 h-8 rounded-full bg-primary-600/40" />
+                      <div className="w-1 h-8 rounded-full bg-primary-500/40" />
                       <div className="flex-1">
                         <div className="font-medium">{mod.name}</div>
                       </div>
-                      <ChevronRight className="h-4 w-4 text-foreground/30" />
+                      <ChevronRight className="h-4 w-4 text-foreground/20" />
                     </motion.button>
                   ))}
                 </div>
                 <button
                   onClick={() => goBack(0)}
-                  className="flex items-center gap-1 text-sm text-foreground/50 hover:text-foreground transition-colors"
+                  className="flex items-center gap-1 text-sm text-foreground/40 hover:text-foreground transition-colors"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   {common("back")}
@@ -178,10 +189,10 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.25 }}
+                transition={gentle}
                 className="space-y-4"
               >
-                <h2 className="text-lg font-semibold">{t("selectTopic")}</h2>
+                <h2 className="text-lg font-semibold font-[family-name:var(--font-display)]">{t("selectTopic")}</h2>
                 <div className="space-y-2 max-h-[50vh] overflow-y-auto pr-1">
                   {selectedModule.topics.map((topic, i) => (
                     <motion.button
@@ -194,16 +205,16 @@ export default function OnboardingPage() {
                         session.setTopic(topic.id);
                         goForward(3);
                       }}
-                      className="w-full p-3 rounded-xl border border-border hover:border-border-strong bg-surface text-left transition-all"
+                      className="w-full p-3 rounded-[var(--radius-lg)] border border-border hover:border-border-strong bg-[var(--bg-surface)] text-left transition-all"
                     >
                       <div className="font-medium text-sm">{topic.name}</div>
-                      <div className="text-xs text-foreground/40 mt-1">{topic.description}</div>
+                      <div className="text-xs text-foreground/30 mt-1">{topic.description}</div>
                     </motion.button>
                   ))}
                 </div>
                 <button
                   onClick={() => goBack(1)}
-                  className="flex items-center gap-1 text-sm text-foreground/50 hover:text-foreground transition-colors"
+                  className="flex items-center gap-1 text-sm text-foreground/40 hover:text-foreground transition-colors"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   {common("back")}
@@ -220,10 +231,10 @@ export default function OnboardingPage() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.25 }}
+                transition={gentle}
                 className="space-y-4"
               >
-                <h2 className="text-lg font-semibold">{t("selectMode")}</h2>
+                <h2 className="text-lg font-semibold font-[family-name:var(--font-display)]">{t("selectMode")}</h2>
                 <div className="space-y-3">
                   {modeConfig.map(({ key, icon: Icon }, i) => {
                     const isRecommended =
@@ -241,9 +252,9 @@ export default function OnboardingPage() {
                           session.setMode(key);
                           handleFinish();
                         }}
-                        className="w-full flex items-start gap-4 p-5 rounded-xl border border-border hover:border-border-strong bg-surface text-left transition-all"
+                        className="w-full flex items-start gap-4 p-5 rounded-[var(--radius-lg)] border border-border hover:border-border-strong bg-[var(--bg-surface)] text-left transition-all"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-primary-600/15 flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-[var(--radius-md)] bg-primary-600/15 flex items-center justify-center shrink-0">
                           <Icon className="h-5 w-5 text-primary-400" />
                         </div>
                         <div className="flex-1">
@@ -253,18 +264,18 @@ export default function OnboardingPage() {
                               <Badge variant="primary" size="sm">{t("recommended")}</Badge>
                             )}
                           </div>
-                          <p className="text-sm text-foreground/50 mt-1">
+                          <p className="text-sm text-foreground/40 mt-1">
                             {st(`modeDescriptions.${key}`)}
                           </p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-foreground/30 mt-3" />
+                        <ChevronRight className="h-4 w-4 text-foreground/20 mt-3" />
                       </motion.button>
                     );
                   })}
                 </div>
                 <button
                   onClick={() => goBack(2)}
-                  className="flex items-center gap-1 text-sm text-foreground/50 hover:text-foreground transition-colors"
+                  className="flex items-center gap-1 text-sm text-foreground/40 hover:text-foreground transition-colors"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   {common("back")}

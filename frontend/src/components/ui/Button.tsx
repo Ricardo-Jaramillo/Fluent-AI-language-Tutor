@@ -5,19 +5,21 @@ import Spinner from "./Spinner";
 
 const variantStyles = {
   primary:
-    "bg-primary-600 text-white hover:bg-primary-500 shadow-md hover:shadow-glow-primary",
+    "bg-primary-600 text-white hover:bg-primary-500 hover:-translate-y-px hover:shadow-glow-primary active:bg-primary-700 active:translate-y-0 active:scale-[0.98]",
   secondary:
-    "bg-surface-elevated text-foreground border border-border hover:border-border-strong",
-  ghost: "text-foreground/70 hover:text-foreground hover:bg-surface-elevated",
-  danger: "bg-error text-white hover:bg-red-500",
+    "bg-transparent border border-border text-foreground/65 hover:bg-surface hover:border-border-strong hover:text-foreground",
+  ghost:
+    "text-foreground/45 hover:text-foreground/65 hover:underline underline-offset-4",
+  danger:
+    "bg-error text-white hover:brightness-110",
   outline:
     "border border-primary-600 text-primary-400 hover:bg-primary-600/10",
 } as const;
 
 const sizeStyles = {
-  sm: "px-3 py-1.5 text-sm rounded-lg gap-1.5",
-  md: "px-4 py-2 text-sm rounded-lg gap-2",
-  lg: "px-6 py-3 text-base rounded-xl gap-2",
+  sm: "px-3 py-1.5 text-sm gap-1.5",
+  md: "px-5 py-2.5 text-sm gap-2",
+  lg: "px-6 py-3 text-base gap-2",
 } as const;
 
 interface ButtonProps {
@@ -48,10 +50,11 @@ export default function Button({
   return (
     <motion.button
       whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
-      className={`inline-flex items-center justify-center font-medium transition-all disabled:opacity-50 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center justify-center font-semibold rounded-[var(--radius-md)] transition-all duration-[var(--duration-normal)] focus-visible:outline-2 focus-visible:outline-primary-400 focus-visible:outline-offset-2 disabled:opacity-40 disabled:pointer-events-none ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {loading ? (
         <Spinner size="sm" />

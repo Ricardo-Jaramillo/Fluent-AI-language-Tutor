@@ -34,14 +34,15 @@ export default function Avatar({
       <img
         src={src}
         alt={name || "Avatar"}
-        className={`rounded-full object-cover ${sizeStyles[size]} ${className}`}
+        className={`rounded-full object-cover ring-2 ring-border ${sizeStyles[size]} ${className}`}
       />
     );
   }
 
   return (
     <div
-      className={`rounded-full bg-primary-600/20 text-primary-400 font-medium flex items-center justify-center ${sizeStyles[size]} ${className}`}
+      className={`rounded-full bg-primary-600/15 text-primary-400 font-medium flex items-center justify-center ring-2 ring-border ${sizeStyles[size]} ${className}`}
+      aria-label={name || "User avatar"}
     >
       {name ? getInitials(name) : "?"}
     </div>

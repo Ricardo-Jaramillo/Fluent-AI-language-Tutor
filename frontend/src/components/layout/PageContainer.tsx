@@ -19,7 +19,7 @@ export default function PageContainer({
   size = "lg",
 }: PageContainerProps) {
   return (
-    <div className={`mx-auto px-4 sm:px-6 py-8 sm:py-12 ${sizeStyles[size]} ${className}`}>
+    <div className={`mx-auto px-4 sm:px-6 py-6 sm:py-12 ${sizeStyles[size]} ${className}`}>
       {children}
     </div>
   );

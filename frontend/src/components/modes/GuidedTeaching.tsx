@@ -2,9 +2,9 @@
 
 import { useSessionStore } from "@/stores/session";
 import { motion } from "framer-motion";
-import { BookOpen } from "lucide-react";
+import { GraduationCap } from "lucide-react";
 import MessageBubble from "@/components/MessageBubble";
-import { Skeleton } from "@/components/ui";
+import { Skeleton, ProgressBar } from "@/components/ui";
 import Sidebar from "@/components/layout/Sidebar";
 import syllabus from "@/data/syllabus.json";
 
@@ -19,35 +19,51 @@ export default function GuidedTeaching() {
   return (
     <div className="flex flex-1 overflow-hidden">
       {/* Main conversation */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6 space-y-2">
+        {/* Lesson progress bar (Section 5 - Guided Teaching) */}
+        <ProgressBar value={messages.length * 10} max={100} color="primary" thin className="mb-4" />
+
         {messages.length === 0 && currentTopic && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mt-10 space-y-4"
+            transition={{ type: "spring", stiffness: 200, damping: 28 }}
+            className="text-center mt-10 space-y-4 max-w-sm mx-auto"
           >
-            <div className="w-14 h-14 rounded-2xl bg-primary-600/15 flex items-center justify-center mx-auto">
-              <BookOpen className="h-7 w-7 text-primary-400" />
+            <div className="w-14 h-14 rounded-2xl bg-primary-600/10 flex items-center justify-center mx-auto">
+              <GraduationCap className="h-7 w-7 text-primary-400" />
             </div>
-            <p className="text-lg font-medium text-foreground/70">{currentTopic.name}</p>
-            <p className="text-sm text-foreground/40">{currentTopic.description}</p>
-            <div className="text-sm space-y-1">
-              <p className="text-foreground/50 text-xs uppercase tracking-wider">Conversation starters</p>
+            <p className="text-lg font-medium font-[family-name:var(--font-display)] text-foreground/60">
+              {currentTopic.name}
+            </p>
+            <p className="text-sm text-foreground/30">{currentTopic.description}</p>
+            {/* Conversation starters as chips */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
               {currentTopic.conversation_starters.map((s, i) => (
-                <p key={i} className="text-foreground/60 italic">
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.08 }}
+                  className="px-4 py-2 rounded-full border border-border bg-[var(--bg-surface)] text-sm text-foreground/50 hover:border-border-strong hover:text-foreground/70 transition-colors cursor-pointer"
+                >
                   &ldquo;{s}&rdquo;
-                </p>
+                </motion.span>
               ))}
             </div>
           </motion.div>
         )}
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
+        {messages.map((msg, i) => (
+          <div
+            key={msg.id}
+            className={i > 0 && messages[i - 1].role !== msg.role ? "mt-4" : ""}
+          >
+            <MessageBubble key={msg.id} role={msg.role} content={msg.content} />
+          </div>
         ))}
         {isProcessing && (
-          <div className="mr-auto p-4 rounded-2xl rounded-bl-md bg-surface-elevated border border-border max-w-[60%] space-y-2">
-            <Skeleton width="80%" />
-            <Skeleton width="50%" />
+          <div className="mr-auto max-w-[60%] space-y-2">
+            <Skeleton variant="bubble" />
           </div>
         )}
       </div>
@@ -62,10 +78,10 @@ export default function GuidedTeaching() {
                 initial={{ opacity: 0, x: 8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="text-xs p-2.5 rounded-lg bg-surface border border-border"
+                className="text-xs p-3 rounded-[var(--radius-md)] bg-[var(--bg-surface)] border border-border"
               >
                 <span className="font-medium text-foreground/80">{v.word}</span>
-                <span className="text-foreground/40 ml-2">{v.translation}</span>
+                <span className="text-foreground/30 ml-2">{v.translation}</span>
               </motion.div>
             ))}
           </div>

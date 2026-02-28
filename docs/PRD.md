@@ -462,10 +462,11 @@ Track individual word/phrase performance across sessions. Schedule reviews using
 
 ## 21. Implementation Status
 
+*Last updated: February 27, 2026*
+
 ### Legend
 - **WORKING** — Feature is fully implemented and validated end-to-end
 - **PARTIAL** — Core logic exists but integration or edge cases are incomplete
-- **SCAFFOLDED** — UI or code structure exists but no real functionality behind it
 - **NOT STARTED** — Planned but no code yet
 
 ### Backend
@@ -473,78 +474,76 @@ Track individual word/phrase performance across sessions. Schedule reviews using
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
 | 1 | Health endpoint (`/api/health`) | WORKING | Returns status, version, eSpeak availability. Tested. |
-| 2 | Chat API (`/api/chat`) | WORKING (isolated) | All 4 LLM providers (DeepSeek, Claude, OpenAI, Gemini) fully implemented. Never called by frontend. |
-| 3 | IPA analysis API (`/api/ipa/analyze`) | WORKING (isolated) | eSpeak-NG integration works. Never called by frontend. |
-| 4 | IPA comparison API (`/api/ipa/compare`) | WORKING (isolated) | Compares spoken vs correct IPA. Never called by frontend. |
-| 5 | WebSocket handler (`/ws/conversation`) | PARTIAL | Text chat and config updates work. Audio message handling NOT implemented. |
-| 6 | STT engine (faster-whisper) | SCAFFOLDED | Class written with transcribe/confidence methods. Never instantiated or called. |
-| 7 | TTS engine (Piper) | SCAFFOLDED | Class written with synthesize methods. Never instantiated or called. |
-| 8 | LLM provider factory | WORKING | Factory pattern with 4 providers. Validated API keys. Tested. |
-| 9 | Backend tests | WORKING | 20 tests covering health, IPA, LLM factory, STT/TTS data structures. |
+| 2 | Chat API (`/api/chat`) | WORKING | All 4 LLM providers (DeepSeek, Claude, OpenAI, Gemini) fully implemented. |
+| 3 | IPA analysis API (`/api/ipa/analyze`) | WORKING | eSpeak-NG integration, word-by-word IPA transcription. |
+| 4 | IPA comparison API (`/api/ipa/compare`) | WORKING | Compares spoken vs correct IPA with severity levels. |
+| 5 | TTS endpoint (`/api/tts`) | WORKING | Piper TTS with eSpeak-NG fallback, returns WAV audio. Tested (4 tests). |
+| 6 | WebSocket handler (`/ws/conversation`) | WORKING | Text + audio + config + ping/pong. Full pipeline: audio → STT → IPA → LLM → response. Tested (10 tests). |
+| 7 | STT engine (faster-whisper) | WORKING | Transcription with word-level timestamps and confidence scores. Connected to WebSocket handler. |
+| 8 | TTS engine (Piper) | WORKING | Synthesize with model validation, input encoding, returncode checking. Piper → eSpeak-NG fallback chain. |
+| 9 | IPA engine (eSpeak-NG) | WORKING | Deterministic IPA transcription, pronunciation comparison, severity levels (minor/moderate/severe). |
+| 10 | LLM provider factory | WORKING | Factory pattern with 4 providers. Validated API keys. Tested. |
+| 11 | Backend tests | WORKING | 37 tests across 9 test files: health, IPA (5), IPA integration (3), LLM factory (5), STT (5), TTS (4), TTS endpoint (4), WS audio (4), WS text (6). |
 
 ### Frontend-Backend Integration
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 10 | API calls to backend | NOT STARTED | Zero `fetch()` calls to backend URLs in any frontend file. |
-| 11 | WebSocket client | NOT STARTED | No WebSocket code in frontend. `NEXT_PUBLIC_BACKEND_URL` defined but never used. |
-| 12 | Audio capture (getUserMedia) | NOT STARTED | Mic button is visual-only toggle. No MediaRecorder or audio processing. |
-| 13 | Audio streaming to backend | NOT STARTED | No audio encoding, chunking, or transmission code. |
-| 14 | LLM response rendering | NOT STARTED | MessageBubble component works but `addMessage()` is never called with real data. |
-| 15 | TTS audio playback | NOT STARTED | IPA Modal "Listen" button has no click handler. No audio element or playback code. |
+| 12 | API client (`lib/api.ts`) | WORKING | BACKEND_URL config, `getWsUrl()` helper. Respects `NEXT_PUBLIC_BACKEND_URL`. |
+| 13 | WebSocket client (`hooks/useWebSocket.ts`) | WORKING | Auto-reconnect with exponential backoff, ping/pong keepalive, binary support, visibility-aware. |
+| 14 | Audio capture (`hooks/useAudioCapture.ts`) | WORKING | getUserMedia + MediaRecorder, WebM/Opus encoding, permission handling, stream cleanup. |
+| 15 | Audio streaming to backend | WORKING | Mic → MediaRecorder → `audio_start` message → binary blob via WebSocket. |
+| 16 | LLM response rendering | WORKING | WebSocket `response` messages → `addMessage()` → MessageBubble with animations. |
+| 17 | TTS audio playback (`lib/audio.ts`) | WORKING | Fetches `/api/tts`, plays via HTMLAudioElement, state tracking, stop/cleanup. |
+| 18 | System prompts (`lib/prompts.ts`) | WORKING | Mode-aware prompt builder: chat/correction/teaching with level and topic context. |
 
 ### Database & Auth
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 16 | Supabase schema (6 tables + RLS) | WORKING | Migration creates profiles, sessions, messages, pronunciation_errors, grammar_errors, progress. |
-| 17 | Auth: Sign up/in | WORKING | Real Supabase Auth calls with error handling and form validation. |
-| 18 | Auth: Route protection (middleware) | WORKING | Middleware checks auth on protected routes, redirects to /auth. Graceful fallback when Supabase unreachable. |
-| 19 | Auth: Sign out | WORKING | NavBar button calls supabase.auth.signOut(). |
-| 20 | Auth: Password reset | NOT STARTED | i18n text exists, no code. |
-| 21 | Auth: User state in app | SCAFFOLDED | useAuthStore exists but is never consumed by any component. |
-| 22 | Supabase data queries | NOT STARTED | Frontend never queries any table (sessions, progress, etc.). |
-| 23 | Session persistence to DB | NOT STARTED | Session data lives in client-side Zustand only. |
-| 24 | Profile data from DB | NOT STARTED | Profile row created by trigger but never read by frontend. |
+| 19 | Supabase schema (6 tables + RLS) | WORKING | profiles, sessions, messages, pronunciation_errors, grammar_errors, progress. |
+| 20 | Auth: Sign up/in | WORKING | Real Supabase Auth calls with error handling and form validation. |
+| 21 | Auth: Route protection (middleware) | WORKING | Middleware checks auth on protected routes, redirects to /auth. |
+| 22 | Auth: Sign out | WORKING | NavBar button calls supabase.auth.signOut(). |
+| 23 | Auth: Password reset | NOT STARTED | i18n text exists, no code. |
+| 24 | Auth: User state in app | WORKING | AuthProvider fetches user on mount, listens for auth changes, populates useAuthStore. |
+| 25 | Session persistence to DB | WORKING | Session row created on connect, messages saved on send/receive, scores updated on end. |
+| 26 | Dashboard data queries | WORKING | Queries sessions table with ordering/limits, computes score averages. |
+| 27 | Profile data from DB | WORKING | AuthProvider reads profile, settings page persists ui_language and llm_provider to profiles table. |
 
 ### Frontend Features
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 25 | Landing page | WORKING | Gradient hero, glass feature cards, stats bar, animated CTA. |
-| 26 | Auth page | WORKING | Glass card, cross-fade sign in/up, password strength indicator, error display. |
-| 27 | Onboarding (4-step wizard) | PARTIAL | Level/Module/Topic/Mode selection works with syllabus data. Not persisted to DB. Selections lost on refresh. |
-| 28 | Session page (UI shell) | WORKING | Immersive layout, header with badge, mic button with animations. |
-| 29 | Mic button (visual) | SCAFFOLDED | Pulse rings, glow, state transitions all work. No actual audio capture. |
-| 30 | Conversation messages | SCAFFOLDED | MessageBubble with slide-in animations renders correctly. Messages array always empty. |
-| 31 | Free Chat mode | SCAFFOLDED | Empty state with icon. No actual conversation. |
-| 32 | Real-Time Correction mode | SCAFFOLDED | Corrections sidebar placeholder. No actual corrections. |
-| 33 | Guided Teaching mode | PARTIAL | Displays topic vocabulary and conversation starters from syllabus. No actual teaching conversation. |
-| 34 | IPA Modal | SCAFFOLDED | Color-coded IPA diff, severity badge, explanation area. Never opened with real data. |
-| 35 | Dashboard (stats + history) | SCAFFOLDED | Stats cards, progress bars, session history all render. Hardcoded mock data (3 fake sessions). |
-| 36 | Settings: Language switching | WORKING | next-intl locale switching via settings page + NavBar dropdown. All 4 locales complete. |
-| 37 | Settings: LLM provider | SCAFFOLDED | Selection persists to localStorage. Never affects backend behavior. |
-| 38 | Settings: Theme | SCAFFOLDED | Selection persists to localStorage. `<html>` always has `class="dark"`. |
-| 39 | Settings: Delete account | SCAFFOLDED | Danger zone card with button. No click handler. |
-| 40 | Toast notifications | WORKING | Used for settings feedback. Not wired to auth/session/error events yet. |
-| 41 | i18n (4 languages) | WORKING | EN/ES/FR/DE complete. All UI strings through next-intl. |
-| 42 | UI component library (13 components) | WORKING | Button, Card, Input, Badge, Spinner, Skeleton, ProgressBar, Modal, Toast, Toggle, Select, Avatar, Tooltip. |
-| 43 | Animation system | WORKING | 12 reusable Framer Motion variants. Page transitions, stagger, scroll reveal. |
-| 44 | Responsive layout (NavBar + Sidebar) | WORKING | Desktop nav, mobile hamburger drawer, sidebar with mobile trigger. |
-| 45 | Design token system | WORKING | Full CSS custom properties: colors, surfaces, typography, shadows, radii, z-index, transitions. |
-| 46 | Docker (frontend + backend) | WORKING | docker-compose with build args for NEXT_PUBLIC_ vars, host.docker.internal networking. |
+| 28 | Landing page | WORKING | Gradient hero, glass feature cards, stats bar, animated CTA. All text via i18n. |
+| 29 | Auth page | WORKING | Glass card, cross-fade sign in/up, password strength indicator, error display. |
+| 30 | Onboarding (4-step wizard) | PARTIAL | Level/Module/Topic/Mode selection works with syllabus data. Not persisted to DB. Selections lost on refresh. |
+| 31 | Session page (full integration) | WORKING | 565-line page wiring WebSocket, audio capture, messages, TTS, IPA, and DB persistence. Connection status indicator. |
+| 32 | Mic button (audio capture) | WORKING | Pulse rings, glow, state transitions. Captures real audio via useAudioCapture hook. |
+| 33 | Conversation messages | WORKING | MessageBubble with slide-in animations. Real messages from WebSocket + Supabase. |
+| 34 | Free Chat mode | WORKING | Open conversation at user's level. Empty state with i18n text. |
+| 35 | Real-Time Correction mode | WORKING | Main chat + corrections sidebar showing last 5 assistant messages. All text via i18n. |
+| 36 | Guided Teaching mode | WORKING | Topic vocabulary sidebar, conversation starters, lesson progress bar. All text via i18n. |
+| 37 | IPA Modal | WORKING | Color-coded IPA diff, severity badge, TTS playback, explanation area. All text via i18n. |
+| 38 | Session End Overlay | WORKING | Animated score rings (fluency/grammar/pronunciation), overall score, practice again / view dashboard buttons. All text via i18n. |
+| 39 | Dashboard (stats + history) | WORKING | Real Supabase data: session count, average scores, skill breakdown, session history list. |
+| 40 | Settings: Language switching | WORKING | next-intl locale switching via settings page + NavBar dropdown. All 4 locales complete. |
+| 41 | Settings: LLM provider | WORKING | Selection persists to localStorage and Supabase profiles table. Sent to backend via WebSocket config. |
+| 42 | Settings: Theme | WORKING | ThemeProvider applies dark/light/system class to `<html>`. Persists to localStorage. |
+| 43 | Settings: Delete account | PARTIAL | Calls supabase.auth.signOut() with confirmation dialog. Does not fully delete Supabase data. |
+| 44 | Toast notifications | WORKING | Used for settings feedback. |
+| 45 | i18n (4 languages) | WORKING | EN/ES/FR/DE complete. All UI strings through next-intl — zero hardcoded strings. |
+| 46 | UI component library (13 components) | WORKING | Button, Card, Input, Badge, Spinner, Skeleton, ProgressBar, Modal, Toast, Toggle, Select, Avatar, Tooltip. |
+| 47 | Animation system | WORKING | 12 reusable Framer Motion variants. Page transitions, stagger, scroll reveal. |
+| 48 | Responsive layout (NavBar + Sidebar) | WORKING | Desktop nav, mobile hamburger drawer, sidebar with mobile trigger. |
+| 49 | Design token system | WORKING | Full CSS custom properties: colors, surfaces, typography, shadows, radii, z-index, transitions. |
+| 50 | Docker (frontend + backend) | WORKING | docker-compose with build args for NEXT_PUBLIC_ vars, host.docker.internal networking. |
 
-### Integration Steps Required (Priority Order)
+### Remaining Work (Priority Order)
 
-To make Fluent functional as a conversation app, these features must be implemented in order:
-
-1. **Audio capture** — Add `getUserMedia` + `MediaRecorder` to mic button, encode audio as WAV/WebM
-2. **WebSocket client** — Connect session page to `wss://backend:8000/ws/conversation`
-3. **STT integration** — Wire STT engine into WebSocket handler for incoming audio messages
-4. **Message flow** — Pipe STT transcription to LLM, stream LLM response back via WebSocket, call `addMessage()` on frontend
-5. **IPA pipeline** — After STT, run IPA analysis on low-confidence words, attach errors to messages
-6. **TTS endpoint** — Expose TTS as HTTP endpoint or WebSocket binary message, play in frontend
-7. **Supabase data** — Persist sessions/messages/errors to DB on session end
-8. **Dashboard queries** — Replace mock data with real Supabase queries
-9. **Profile integration** — Read user profile from DB, display name in NavBar, persist settings
-10. **Theme application** — Read theme setting from store, apply `dark`/`light` class to `<html>`
+1. **Grammar scoring** — Currently placeholder (~70 + message count). Should use LLM feedback for real scoring.
+2. **Onboarding persistence** — Selections lost on refresh. Should persist to session store or Supabase.
+3. **Password reset** — i18n text exists, no code.
+4. **Account deletion** — Currently just signs out. Should delete Supabase user data.
+5. **Error pattern tracking** — No cross-session error analysis yet (Phase 2 feature).
+6. **Streaming LLM responses** — Currently waits for full response. Could stream tokens for perceived latency.

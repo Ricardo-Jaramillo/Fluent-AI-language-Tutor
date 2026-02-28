@@ -1,6 +1,7 @@
 """Abstract base class for LLM providers."""
 
 from abc import ABC, abstractmethod
+from collections.abc import AsyncIterator
 from dataclasses import dataclass
 
 
@@ -36,6 +37,16 @@ class BaseLLMProvider(ABC):
     ) -> ChatResponse:
         """Send a chat completion request."""
         ...
+
+    async def stream_chat(
+        self,
+        messages: list[ChatMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 1024,
+    ) -> AsyncIterator[str]:
+        """Stream chat tokens. Default falls back to non-streaming."""
+        response = await self.chat(messages, temperature, max_tokens)
+        yield response.content
 
     @abstractmethod
     async def analyze_pronunciation(

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     supabase_service_role_key: str = ""
 
     # CORS
-    backend_cors_origins: str = "http://localhost:3000"
+    backend_cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
 
     @property
     def cors_origins(self) -> list[str]:

@@ -10,6 +10,7 @@ services:
       - "host.docker.internal:host-gateway"
     volumes:
       - ./backend/models:/app/models
+      - hf-cache:/root/.cache/huggingface
     restart: unless-stopped
 
   frontend:
@@ -29,3 +30,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  hf-cache:

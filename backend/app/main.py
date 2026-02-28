@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
 
 from app.config import settings
@@ -37,6 +38,11 @@ class ChatResponse(BaseModel):
     provider: str
     model: str
     usage: dict | None = None
+
+
+class TTSRequest(BaseModel):
+    text: str
+    voice: str = "de_DE-thorsten-high"
 
 
 class IPAAnalyzeRequest(BaseModel):
@@ -110,6 +116,22 @@ async def ipa_compare(request: IPACompareRequest):
         request.language,
     )
     return result
+
+
+@app.post("/api/tts")
+async def tts_synthesize(request: TTSRequest):
+    """Synthesize text to speech audio."""
+    if not request.text.strip():
+        raise HTTPException(status_code=400, detail="Text must not be empty")
+
+    from app.tts.engine import TTSEngine
+
+    try:
+        engine = TTSEngine(voice=request.voice)
+        result = engine.synthesize(request.text)
+        return Response(content=result.audio_data, media_type="audio/wav")
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=str(e))
 
 
 @app.websocket("/ws/conversation")

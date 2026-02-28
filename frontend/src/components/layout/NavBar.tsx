@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase";
 import { Menu, X, LayoutDashboard, GraduationCap, Settings, LogOut, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Avatar from "@/components/ui/Avatar";
+import { useAuthStore } from "@/stores/auth";
 
 const localeConfig = [
   { value: "en", label: "EN" },
@@ -20,6 +21,7 @@ export default function NavBar() {
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
+  const { user } = useAuthStore();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -47,7 +49,7 @@ export default function NavBar() {
 
   const navLinks = [
     { href: "/dashboard" as const, label: t("dashboard"), icon: LayoutDashboard },
-    { href: "/onboarding" as const, label: t("session"), icon: GraduationCap },
+    { href: "/session" as const, label: t("session"), icon: GraduationCap },
     { href: "/settings" as const, label: t("settings"), icon: Settings },
   ];
 
@@ -132,7 +134,7 @@ export default function NavBar() {
             {t("signOut")}
           </button>
           <div className="ml-2">
-            <Avatar name="User" size="sm" />
+            <Avatar name={user?.displayName ?? user?.email ?? "User"} size="sm" />
           </div>
         </nav>
 

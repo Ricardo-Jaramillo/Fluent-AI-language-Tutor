@@ -1,5 +1,7 @@
 """Google Gemini LLM provider."""
 
+from collections.abc import AsyncIterator
+
 from google import genai
 from google.genai.types import Content, GenerateContentConfig, Part
 
@@ -54,6 +56,37 @@ class GeminiProvider(BaseLLMProvider):
                 "completion_tokens": response.usage_metadata.candidates_token_count,
             } if response.usage_metadata else None,
         )
+
+    async def stream_chat(
+        self,
+        messages: list[ChatMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 1024,
+    ) -> AsyncIterator[str]:
+        """Stream chat tokens from Gemini."""
+        system_text = ""
+        contents: list[Content] = []
+        for m in messages:
+            if m.role == "system":
+                system_text = m.content
+            else:
+                role = "user" if m.role == "user" else "model"
+                contents.append(Content(role=role, parts=[Part(text=m.content)]))
+
+        config = GenerateContentConfig(
+            temperature=temperature,
+            max_output_tokens=max_tokens,
+        )
+        if system_text:
+            config.system_instruction = system_text
+
+        async for chunk in await self.client.aio.models.generate_content_stream(
+            model=self.model,
+            contents=contents,
+            config=config,
+        ):
+            if chunk.text:
+                yield chunk.text
 
     async def analyze_pronunciation(
         self,

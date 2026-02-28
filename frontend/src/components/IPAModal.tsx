@@ -1,7 +1,11 @@
 "use client";
 
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Modal, Badge, Button } from "@/components/ui";
 import { Volume2, X } from "lucide-react";
+import { playTTS } from "@/lib/audio";
+import { useSettingsStore } from "@/stores/settings";
 
 interface IPAModalProps {
   isOpen: boolean;
@@ -28,7 +32,16 @@ export default function IPAModal({
   explanation,
   severity,
 }: IPAModalProps) {
+  const t = useTranslations("session");
   const config = severityConfig[severity];
+  const [isPlaying, setIsPlaying] = useState(false);
+  const ttsVoice = useSettingsStore((s) => s.ttsVoice);
+
+  const handleListen = async () => {
+    setIsPlaying(true);
+    await playTTS(word, ttsVoice);
+    setIsPlaying(false);
+  };
 
   return (
     <Modal
@@ -44,14 +57,14 @@ export default function IPAModal({
 
         <div className="space-y-3 p-4 rounded-[var(--radius-md)] bg-[var(--bg-surface)]">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-foreground/40">You said</span>
+            <span className="text-foreground/40">{t("youSaid")}</span>
             <span className="font-[family-name:var(--font-mono)] text-[var(--accent-coral)] text-[var(--text-ipa)]">
               {spokenIPA}
             </span>
           </div>
           <div className="h-px bg-border" />
           <div className="flex justify-between items-center text-sm">
-            <span className="text-foreground/40">Target</span>
+            <span className="text-foreground/40">{t("target")}</span>
             <span className="font-[family-name:var(--font-mono)] text-success text-[var(--text-ipa)]">
               {correctIPA}
             </span>
@@ -66,8 +79,10 @@ export default function IPAModal({
             size="sm"
             icon={<Volume2 className="h-4 w-4" />}
             className="flex-1"
+            onClick={handleListen}
+            disabled={isPlaying}
           >
-            Listen
+            {isPlaying ? t("playing") : t("listen")}
           </Button>
           <Button
             variant="secondary"
@@ -76,7 +91,7 @@ export default function IPAModal({
             onClick={onClose}
             className="flex-1"
           >
-            Close
+            {t("close")}
           </Button>
         </div>
       </div>

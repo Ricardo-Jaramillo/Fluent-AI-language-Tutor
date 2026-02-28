@@ -33,6 +33,8 @@
     "hero": "Habla aleman con confianza",
     "subtitle": "Practica de conversacion con IA desde A1 hasta C1",
     "cta": "Empezar",
+    "taglineSub": "Gratis. Sin tarjeta de credito. Empieza a hablar en 2 minutos.",
+    "liveSession": "Sesion en vivo",
     "features": {
       "chat": {
         "title": "Chat libre",
@@ -48,30 +50,42 @@
       }
     }
   },
-  "onboarding": {
-    "welcome": "Bienvenido a Fluent!",
-    "selectLevel": "Cual es tu nivel de aleman?",
-    "selectModule": "Elige un modulo",
-    "selectTopic": "Elige un tema",
-    "selectMode": "Como quieres practicar?",
-    "step": "Paso",
-    "recommended": "Recomendado"
-  },
   "session": {
-    "startRecording": "Manten para hablar",
-    "stopRecording": "Suelta para detener",
+    "startRecording": "Toca para grabar",
+    "stopRecording": "Toca para detener",
     "thinking": "Pensando...",
     "endSession": "Finalizar sesion",
-    "modes": {
-      "chat": "Chat libre",
-      "correction": "Correccion en tiempo real",
-      "teaching": "Ensenanza guiada"
-    },
-    "modeDescriptions": {
-      "chat": "Practica de conversacion abierta a tu nivel",
-      "correction": "Recibe correcciones instantaneas mientras hablas",
-      "teaching": "Lecciones estructuradas con vocabulario y ejercicios"
-    }
+    "connecting": "Conectando...",
+    "connected": "Conectado",
+    "disconnected": "Desconectado",
+    "reconnecting": "Reconectando...",
+    "connectionError": "Error de conexion",
+    "typeMessage": "Escribe un mensaje en aleman...",
+    "send": "Enviar",
+    "micUnavailable": "Microfono no disponible",
+    "aiSpeaking": "La IA esta hablando",
+    "emptyChat": "Listo? Vamos!",
+    "emptyChatHint": "Toca el microfono y di algo en aleman. No te preocupes por los errores.",
+    "grammar": "Gramatica",
+    "pronunciation": "Pronunciacion",
+    "perfectGrammar": "Gramatica perfecta!",
+    "nativeSuggestion": "Dilo como un nativo",
+    "tapToReview": "Toca para revisar",
+    "replay": "Repetir",
+    "translate": "Traducir",
+    "overallScore": "Puntuacion general",
+    "vocabulary": "Vocabulario",
+    "corrections": "Correcciones",
+    "youSaid": "Dijiste",
+    "target": "Objetivo",
+    "listen": "Escuchar",
+    "playing": "Reproduciendo...",
+    "close": "Cerrar",
+    "gutGemacht": "Bien hecho!",
+    "messagesExchanged": "{count} mensajes intercambiados",
+    "overall": "General:",
+    "practiceAgain": "Practicar de nuevo",
+    "viewDashboard": "Ver panel"
   },
   "dashboard": {
     "title": "Tu progreso",
@@ -84,7 +98,8 @@
     "newSession": "Nueva sesion",
     "fluency": "Fluidez",
     "grammar": "Gramatica",
-    "pronunciation": "Pronunciacion"
+    "pronunciation": "Pronunciacion",
+    "keepItUp": "Sigue asi!"
   },
   "settings": {
     "title": "Configuracion",
@@ -97,8 +112,15 @@
     "default": "Por defecto",
     "languageChanged": "Idioma actualizado",
     "providerChanged": "Proveedor de IA actualizado",
+    "voice": "Voz TTS",
+    "voiceChanged": "Voz actualizada",
+    "voiceDescThorsten": "Voz masculina clara, alta calidad",
+    "voiceDescThorstenExpressive": "Voz masculina expresiva",
+    "voiceDescKerstin": "Voz femenina",
+    "voiceDescRamona": "Voz femenina, tono natural",
     "dangerZone": "Zona de peligro",
     "dangerDescription": "Eliminar permanentemente tu cuenta y todos los datos. Esta accion no se puede deshacer.",
+    "dangerDetail": "Eliminar mi cuenta y todos los datos. No se puede deshacer.",
     "deleteAccount": "Eliminar cuenta"
   }
 }

@@ -3,9 +3,11 @@
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useSettingsStore } from "@/stores/settings";
+import { useAuthStore } from "@/stores/auth";
 import { useToastStore } from "@/stores/toast";
+import { createClient } from "@/lib/supabase";
 import { motion } from "framer-motion";
-import { Globe, Cpu, Sun, Moon, Monitor, Check, Trash2 } from "lucide-react";
+import { Globe, Cpu, Sun, Moon, Monitor, Check, Trash2, Volume2 } from "lucide-react";
 import { Card, Badge, Button } from "@/components/ui";
 import NavBar from "@/components/layout/NavBar";
 import PageContainer from "@/components/layout/PageContainer";
@@ -25,6 +27,13 @@ const languages = [
   { value: "de", label: "Deutsch", flag: "DE" },
 ];
 
+const voices = [
+  { value: "de_DE-thorsten-high" as const, label: "Thorsten", descKey: "voiceDescThorsten", isDefault: true },
+  { value: "de_DE-thorsten_emotional-medium" as const, label: "Thorsten (Expressive)", descKey: "voiceDescThorstenExpressive" },
+  { value: "de_DE-kerstin-low" as const, label: "Kerstin", descKey: "voiceDescKerstin" },
+  { value: "de_DE-ramona-low" as const, label: "Ramona", descKey: "voiceDescRamona" },
+];
+
 const themeConfig = [
   { value: "dark" as const, icon: Moon },
   { value: "light" as const, icon: Sun },
@@ -36,11 +45,17 @@ export default function SettingsPage() {
   const router = useRouter();
   const pathname = usePathname();
   const settings = useSettingsStore();
+  const { user } = useAuthStore();
   const addToast = useToastStore((s) => s.addToast);
+
+  const supabase = createClient();
 
   const handleLanguageChange = (locale: string) => {
     router.replace(pathname, { locale });
     addToast("success", t("languageChanged"));
+    if (user) {
+      supabase.from("profiles").update({ ui_language: locale }).eq("id", user.id);
+    }
   };
 
   return (
@@ -89,6 +104,9 @@ export default function SettingsPage() {
                   onClick={() => {
                     settings.setLLMProvider(value);
                     addToast("success", t("providerChanged"));
+                    if (user) {
+                      supabase.from("profiles").update({ llm_provider: value }).eq("id", user.id);
+                    }
                   }}
                   className={`flex flex-col p-3 rounded-[var(--radius-lg)] border text-sm text-left transition-all ${
                     settings.llmProvider === value
@@ -141,13 +159,62 @@ export default function SettingsPage() {
 
           <div className="h-px bg-border" />
 
+          {/* Voice */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Volume2 className="h-4 w-4 text-foreground/40" />
+              <h2 className="text-sm font-semibold text-foreground/60 uppercase tracking-wider">{t("voice")}</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {voices.map(({ value, label, descKey, isDefault }) => (
+                <motion.button
+                  key={value}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => {
+                    settings.setTtsVoice(value);
+                    addToast("success", t("voiceChanged"));
+                  }}
+                  className={`flex flex-col p-3 rounded-[var(--radius-lg)] border text-sm text-left transition-all ${
+                    settings.ttsVoice === value
+                      ? "border-primary-500/40 bg-primary-600/8"
+                      : "border-border hover:border-border-strong bg-[var(--bg-surface)]"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full">
+                    <span className="font-medium">{label}</span>
+                    <div className="flex items-center gap-1.5">
+                      {isDefault && (
+                        <Badge variant="primary" size="sm">{t("default")}</Badge>
+                      )}
+                      {settings.ttsVoice === value && (
+                        <Check className="h-4 w-4 text-primary-400" />
+                      )}
+                    </div>
+                  </div>
+                  <span className="text-xs text-foreground/30 mt-1">{t(descKey)}</span>
+                </motion.button>
+              ))}
+            </div>
+          </section>
+
+          <div className="h-px bg-border" />
+
           {/* Danger zone (Section 5) */}
           <Card variant="outlined" className="border-error/15 bg-error/3">
             <h2 className="text-sm font-semibold text-error/80 mb-3">{t("dangerZone")}</h2>
             <p className="text-xs text-foreground/35 mb-4">
-              Delete my account and all data. This can&apos;t be undone.
+              {t("dangerDetail")}
             </p>
-            <Button variant="danger" size="sm" icon={<Trash2 className="h-4 w-4" />}>
+            <Button
+              variant="danger"
+              size="sm"
+              icon={<Trash2 className="h-4 w-4" />}
+              onClick={async () => {
+                if (!confirm(t("dangerDescription"))) return;
+                await supabase.auth.signOut();
+                router.push("/");
+              }}
+            >
               {t("deleteAccount")}
             </Button>
           </Card>

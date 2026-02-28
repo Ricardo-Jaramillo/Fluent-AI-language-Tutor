@@ -14,6 +14,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ .
 
+# Download Piper German voice model (~60MB)
+RUN mkdir -p /app/models && \
+    python -c "import urllib.request; \
+    urllib.request.urlretrieve('https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/high/de_DE-thorsten-high.onnx', '/app/models/de_DE-thorsten-high.onnx'); \
+    urllib.request.urlretrieve('https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/high/de_DE-thorsten-high.onnx.json', '/app/models/de_DE-thorsten-high.onnx.json')"
+
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--ws", "wsproto"]

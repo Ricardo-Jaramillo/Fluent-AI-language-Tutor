@@ -1,13 +1,21 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useSessionStore } from "@/stores/session";
 import { motion } from "framer-motion";
 import { Mic } from "lucide-react";
 import MessageBubble from "@/components/MessageBubble";
 import { Skeleton } from "@/components/ui";
 
-export default function FreeChat() {
+export default function ConversationView() {
+  const t = useTranslations("session");
   const { messages, isProcessing } = useSessionStore();
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length, isProcessing]);
 
   return (
     <div className="flex-1 overflow-y-auto px-4 md:px-6 py-6 space-y-2">
@@ -22,10 +30,10 @@ export default function FreeChat() {
             <Mic className="h-7 w-7 text-primary-400" />
           </div>
           <p className="text-lg font-medium font-[family-name:var(--font-display)] text-foreground/50">
-            Bereit? Los geht&apos;s!
+            {t("emptyChat")}
           </p>
           <p className="text-sm text-foreground/25">
-            Tap the mic and say something in German. Don&apos;t worry about mistakes.
+            {t("emptyChatHint")}
           </p>
         </motion.div>
       )}
@@ -34,7 +42,12 @@ export default function FreeChat() {
           key={msg.id}
           className={i > 0 && messages[i - 1].role !== msg.role ? "mt-4" : ""}
         >
-          <MessageBubble role={msg.role} content={msg.content} />
+          <MessageBubble
+            role={msg.role}
+            content={msg.content}
+            errors={msg.ipaErrors}
+            corrections={msg.grammarCorrections}
+          />
         </div>
       ))}
       {isProcessing && (
@@ -42,6 +55,7 @@ export default function FreeChat() {
           <Skeleton variant="bubble" />
         </div>
       )}
+      <div ref={bottomRef} />
     </div>
   );
 }

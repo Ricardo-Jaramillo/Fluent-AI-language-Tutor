@@ -5,7 +5,7 @@ import { routing } from "./i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const protectedPaths = ["/onboarding", "/session", "/dashboard", "/settings"];
+const protectedPaths = ["/session", "/dashboard", "/settings"];
 
 export async function middleware(request: NextRequest) {
   // Run i18n middleware first to get locale-resolved response

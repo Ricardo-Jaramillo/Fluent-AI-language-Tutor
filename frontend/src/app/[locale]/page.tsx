@@ -94,7 +94,7 @@ export default function LandingPage() {
                   </Button>
                 </Link>
                 <p className="text-xs text-foreground/25">
-                  Free. No credit card. Start speaking in 2 minutes.
+                  {t("taglineSub")}
                 </p>
               </motion.div>
             </div>
@@ -110,7 +110,7 @@ export default function LandingPage() {
                 {/* Fake conversation UI */}
                 <div className="flex items-center gap-2 pb-3 border-b border-border">
                   <div className="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
-                  <span className="text-xs text-foreground/40 font-medium">Live Session</span>
+                  <span className="text-xs text-foreground/40 font-medium">{t("liveSession")}</span>
                 </div>
                 {/* AI message */}
                 <div className="bg-[var(--bg-elevated)] border border-border rounded-2xl rounded-bl-sm p-3 max-w-[85%]">

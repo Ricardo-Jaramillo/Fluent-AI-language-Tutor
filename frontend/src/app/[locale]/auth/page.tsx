@@ -94,7 +94,7 @@ export default function AuthPage() {
         }
       }
 
-      router.push("/onboarding");
+      router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't connect — check your internet and try again.");
     } finally {

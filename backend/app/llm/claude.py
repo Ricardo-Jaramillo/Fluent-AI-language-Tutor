@@ -1,5 +1,7 @@
 """Anthropic Claude LLM provider."""
 
+from collections.abc import AsyncIterator
+
 from anthropic import AsyncAnthropic
 
 from app.llm.base import BaseLLMProvider, ChatMessage, ChatResponse
@@ -50,6 +52,34 @@ class ClaudeProvider(BaseLLMProvider):
                 "output_tokens": response.usage.output_tokens,
             },
         )
+
+    async def stream_chat(
+        self,
+        messages: list[ChatMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 1024,
+    ) -> AsyncIterator[str]:
+        """Stream chat tokens from Claude."""
+        system_text = ""
+        conversation = []
+        for m in messages:
+            if m.role == "system":
+                system_text = m.content
+            else:
+                conversation.append({"role": m.role, "content": m.content})
+
+        kwargs: dict = {
+            "model": self.model,
+            "messages": conversation,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+        }
+        if system_text:
+            kwargs["system"] = system_text
+
+        async with self.client.messages.stream(**kwargs) as stream:
+            async for text in stream.text_stream:
+                yield text
 
     async def analyze_pronunciation(
         self,

@@ -10,10 +10,13 @@ Fluent is a conversation-first German learning tool. Instead of flashcards and g
 
 ## Features
 
-### 3 Conversation Modes
-- **Free Chat** — Open-ended conversation at your level (semi-guided for A1-A2, fully natural for B2-C1)
-- **Real-Time Correction** — Live grammar and pronunciation feedback as you speak
-- **Guided Teaching** — Structured lessons following a 72-topic syllabus across 5 levels
+### Unified Conversation Mode
+A single adaptive conversation experience inspired by Loora. The AI tutor responds naturally at your level, corrects grammar errors inline (❌ → ✅ format), and suggests useful vocabulary — all in one flow. No mode switching, no multi-step onboarding. Pick your level with a chip selector, optionally choose a topic, and start speaking.
+
+### Real-Time Feedback
+- **Grammar corrections** — Tap any user message to open a Loora-style feedback sheet with Grammar and Pronunciation tabs
+- **Pronunciation scoring** — Word-by-word breakdown with IPA details and per-word playback
+- **WebSocket TTS** — Audio delivered as binary frames over WebSocket for near-zero latency (no HTTP round-trips)
 
 ### Phonetic Analysis (IPA)
 - Every utterance analyzed for pronunciation accuracy
@@ -43,7 +46,7 @@ Choose your AI provider: DeepSeek V3 (default, cheapest), Claude, OpenAI, or Gem
 ## Quick Start
 
 ### Prerequisites
-- Python 3.13+
+- Python 3.14+
 - Node.js 24+
 - A [Supabase](https://supabase.com) project (free tier works)
 - eSpeak-NG (`brew install espeak-ng` on macOS)
@@ -105,16 +108,23 @@ fluent/
 │   │   ├── ipa/             # IPA analysis (eSpeak-NG)
 │   │   ├── llm/             # LLM providers (4 backends)
 │   │   └── ws/              # WebSocket conversation handler
-│   └── tests/               # 20 pytest tests
+│   └── tests/               # 40 pytest tests
 ├── frontend/                # Next.js 15
 │   └── src/
-│       ├── app/[locale]/    # Route pages (landing, auth, onboarding, session, dashboard, settings)
+│       ├── app/[locale]/    # Route pages (landing, auth, session, dashboard, settings)
 │       ├── components/
 │       │   ├── ui/          # 13 reusable components (Button, Card, Modal, etc.)
 │       │   ├── layout/      # NavBar, Sidebar, MobileDrawer, PageContainer
-│       │   └── modes/       # FreeChat, RealTimeCorrection, GuidedTeaching
+│       │   ├── ConversationView.tsx  # Unified chat view
+│       │   ├── FeedbackSheet.tsx     # Grammar/Pronunciation feedback panel
+│       │   ├── LevelSelector.tsx     # Tappable A1-C1 level chip
+│       │   ├── TopicChips.tsx        # Horizontal topic suggestions
+│       │   ├── AuthProvider.tsx      # Supabase auth state
+│       │   ├── ThemeProvider.tsx      # Dark/light/system theme
+│       │   └── SessionEndOverlay.tsx  # Post-session score display
+│       ├── hooks/           # useWebSocket (with binary support), useAudioCapture
 │       ├── stores/          # Zustand stores (session, settings, toast, auth)
-│       ├── lib/             # Supabase clients, animation presets
+│       ├── lib/             # Supabase clients, animations, API client, audio, prompts, parseCorrections
 │       ├── i18n/            # next-intl config + 4 locale files
 │       └── data/            # Syllabus JSON (72 topics, 5 levels)
 ├── supabase/                # CLI config + migration (6 tables with RLS)
@@ -160,7 +170,20 @@ Fluent uses a custom design system built from scratch with Tailwind CSS v4 and F
 
 ## Implementation Status
 
-See [docs/PRD.md](docs/PRD.md) Section 21 for a detailed feature-by-feature implementation matrix. The key gap is **frontend-backend integration** — both halves are built but not yet connected.
+The frontend and backend are **fully integrated**. The core conversation flow works end-to-end:
+
+1. **Audio capture** — getUserMedia + MediaRecorder via `useAudioCapture` hook
+2. **WebSocket** — Auto-reconnecting client with ping/pong keepalive via `useWebSocket` hook
+3. **STT** — faster-whisper transcription with word-level confidence scores
+4. **IPA analysis** — eSpeak-NG pronunciation comparison with severity levels
+5. **LLM** — 4-provider factory with streaming (DeepSeek, Claude, OpenAI, Gemini)
+6. **TTS** — Piper TTS via WebSocket binary frames (near-zero latency)
+7. **Persistence** — Sessions, messages, and scores saved to Supabase
+8. **Dashboard** — Real data from Supabase queries
+9. **Auth** — Supabase Auth with profile fetching and route protection
+10. **i18n** — All UI text through next-intl across 4 locales (zero hardcoded strings)
+
+40 backend tests pass. Frontend builds and lints clean. See [docs/PRD.md](docs/PRD.md) Section 21 for the detailed feature-by-feature implementation matrix.
 
 ## Cost
 

@@ -33,6 +33,8 @@
     "hero": "Speak German with Confidence",
     "subtitle": "AI-powered conversation practice from A1 to C1",
     "cta": "Get Started",
+    "taglineSub": "Free. No credit card. Start speaking in 2 minutes.",
+    "liveSession": "Live Session",
     "features": {
       "chat": {
         "title": "Free Chat",
@@ -48,30 +50,42 @@
       }
     }
   },
-  "onboarding": {
-    "welcome": "Welcome to Fluent!",
-    "selectLevel": "What's your German level?",
-    "selectModule": "Choose a module",
-    "selectTopic": "Choose a topic",
-    "selectMode": "How do you want to practice?",
-    "step": "Step",
-    "recommended": "Recommended"
-  },
   "session": {
-    "startRecording": "Hold to speak",
-    "stopRecording": "Release to stop",
+    "startRecording": "Tap to record",
+    "stopRecording": "Tap to stop",
     "thinking": "Thinking...",
     "endSession": "End Session",
-    "modes": {
-      "chat": "Free Chat",
-      "correction": "Real-Time Correction",
-      "teaching": "Guided Teaching"
-    },
-    "modeDescriptions": {
-      "chat": "Open-ended conversation practice at your level",
-      "correction": "Get instant corrections as you speak",
-      "teaching": "Structured lessons with vocabulary and exercises"
-    }
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "connectionError": "Connection error",
+    "typeMessage": "Type a message in German...",
+    "send": "Send",
+    "micUnavailable": "Microphone not available",
+    "aiSpeaking": "AI is speaking",
+    "emptyChat": "Ready? Let's go!",
+    "emptyChatHint": "Tap the mic and say something in German. Don't worry about mistakes.",
+    "grammar": "Grammar",
+    "pronunciation": "Pronunciation",
+    "perfectGrammar": "Perfect Grammar!",
+    "nativeSuggestion": "Say it like a native",
+    "tapToReview": "Tap to review",
+    "replay": "Replay",
+    "translate": "Translate",
+    "overallScore": "Overall Score",
+    "vocabulary": "Vocabulary",
+    "corrections": "Corrections",
+    "youSaid": "You said",
+    "target": "Target",
+    "listen": "Listen",
+    "playing": "Playing...",
+    "close": "Close",
+    "gutGemacht": "Well done!",
+    "messagesExchanged": "{count} messages exchanged",
+    "overall": "Overall:",
+    "practiceAgain": "Practice Again",
+    "viewDashboard": "View Dashboard"
   },
   "dashboard": {
     "title": "Your Progress",
@@ -84,7 +98,8 @@
     "newSession": "New Session",
     "fluency": "Fluency",
     "grammar": "Grammar",
-    "pronunciation": "Pronunciation"
+    "pronunciation": "Pronunciation",
+    "keepItUp": "Keep it up!"
   },
   "settings": {
     "title": "Settings",
@@ -97,8 +112,15 @@
     "default": "Default",
     "languageChanged": "Language updated",
     "providerChanged": "AI provider updated",
+    "voice": "TTS Voice",
+    "voiceChanged": "Voice updated",
+    "voiceDescThorsten": "Clear male voice, high quality",
+    "voiceDescThorstenExpressive": "Expressive male voice",
+    "voiceDescKerstin": "Female voice",
+    "voiceDescRamona": "Female voice, natural tone",
     "dangerZone": "Danger Zone",
     "dangerDescription": "Permanently delete your account and all data. This action cannot be undone.",
+    "dangerDetail": "Delete my account and all data. This can't be undone.",
     "deleteAccount": "Delete Account"
   }
 }

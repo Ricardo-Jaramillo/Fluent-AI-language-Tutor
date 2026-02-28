@@ -1,56 +1,41 @@
 "use client";
 
+import { useEffect, useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { motion } from "framer-motion";
 import { Activity, Trophy, Sparkles, Calendar, MessageCircle } from "lucide-react";
-import { Card, Badge, Button, ProgressBar } from "@/components/ui";
+import { Card, Badge, Button, ProgressBar, Skeleton } from "@/components/ui";
 import NavBar from "@/components/layout/NavBar";
 import PageContainer from "@/components/layout/PageContainer";
 import AnimatedPage from "@/components/AnimatedPage";
 import { staggerContainer, listItem, bouncy } from "@/lib/animations";
+import { useAuthStore } from "@/stores/auth";
+import { createClient } from "@/lib/supabase";
 
-// Mock data — replaced by Supabase queries at runtime
-const mockSessions = [
-  {
-    id: "1",
-    mode: "chat" as const,
-    level: "A1",
-    startedAt: "2026-02-20T10:00:00Z",
-    fluencyScore: 72,
-    grammarScore: 65,
-    pronunciationScore: 58,
-  },
-  {
-    id: "2",
-    mode: "correction" as const,
-    level: "A1",
-    startedAt: "2026-02-21T14:30:00Z",
-    fluencyScore: 78,
-    grammarScore: 70,
-    pronunciationScore: 62,
-  },
-  {
-    id: "3",
-    mode: "teaching" as const,
-    level: "A1",
-    startedAt: "2026-02-22T09:15:00Z",
-    fluencyScore: 80,
-    grammarScore: 75,
-    pronunciationScore: 68,
-  },
-];
+interface SessionRow {
+  id: string;
+  mode: "chat" | "correction" | "teaching" | "unified";
+  level: string;
+  started_at: string;
+  ended_at: string | null;
+  fluency_score: number | null;
+  grammar_score: number | null;
+  pronunciation_score: number | null;
+}
 
-const modeLabels = {
+const modeLabels: Record<string, string> = {
   chat: "Free Chat",
   correction: "Correction",
   teaching: "Teaching",
+  unified: "Conversation",
 };
 
-const modeBadgeVariant = {
-  chat: "primary" as const,
-  correction: "warning" as const,
-  teaching: "success" as const,
+const modeBadgeVariant: Record<string, "primary" | "warning" | "success"> = {
+  chat: "primary",
+  correction: "warning",
+  teaching: "success",
+  unified: "primary",
 };
 
 function formatRelativeDate(dateStr: string): string {
@@ -67,18 +52,37 @@ function formatRelativeDate(dateStr: string): string {
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
+  const { user } = useAuthStore();
+  const [sessions, setSessions] = useState<SessionRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const avgFluency = Math.round(
-    mockSessions.reduce((sum, s) => sum + s.fluencyScore, 0) / mockSessions.length
-  );
-  const avgGrammar = Math.round(
-    mockSessions.reduce((sum, s) => sum + s.grammarScore, 0) / mockSessions.length
-  );
-  const avgPronunciation = Math.round(
-    mockSessions.reduce((sum, s) => sum + s.pronunciationScore, 0) / mockSessions.length
-  );
+  useEffect(() => {
+    if (!user) return;
+    const supabase = createClient();
+    supabase
+      .from("sessions")
+      .select("*")
+      .order("started_at", { ascending: false })
+      .limit(20)
+      .then(({ data }) => {
+        setSessions((data as SessionRow[]) ?? []);
+        setIsLoading(false);
+      });
+  }, [user]);
 
-  const hasData = mockSessions.length > 0;
+  const { avgFluency, avgGrammar, avgPronunciation } = useMemo(() => {
+    const scored = sessions.filter(
+      (s) => s.fluency_score != null || s.grammar_score != null || s.pronunciation_score != null,
+    );
+    if (scored.length === 0) return { avgFluency: 0, avgGrammar: 0, avgPronunciation: 0 };
+    return {
+      avgFluency: Math.round(scored.reduce((sum, s) => sum + (s.fluency_score ?? 0), 0) / scored.length),
+      avgGrammar: Math.round(scored.reduce((sum, s) => sum + (s.grammar_score ?? 0), 0) / scored.length),
+      avgPronunciation: Math.round(scored.reduce((sum, s) => sum + (s.pronunciation_score ?? 0), 0) / scored.length),
+    };
+  }, [sessions]);
+
+  const hasData = sessions.length > 0;
 
   return (
     <AnimatedPage>
@@ -91,18 +95,24 @@ export default function DashboardPage() {
               <h1 className="text-2xl font-bold font-[family-name:var(--font-display)]">{t("title")}</h1>
               {hasData && (
                 <p className="text-sm text-foreground/35 mt-1">
-                  {mockSessions.length} sessions completed. Weiter so!
+                  {sessions.length} {t("sessions").toLowerCase()}. {t("keepItUp")}
                 </p>
               )}
             </div>
-            <Link href="/onboarding">
+            <Link href="/session">
               <Button icon={<Sparkles className="h-4 w-4" />}>
                 {t("newSession")}
               </Button>
             </Link>
           </div>
 
-          {hasData ? (
+          {isLoading ? (
+            <div className="space-y-4">
+              <Skeleton className="h-28" />
+              <Skeleton className="h-28" />
+              <Skeleton className="h-28" />
+            </div>
+          ) : hasData ? (
             <>
               {/* Score rings + stats */}
               <motion.div
@@ -125,7 +135,7 @@ export default function DashboardPage() {
                         transition={bouncy}
                         className="text-3xl font-bold font-[family-name:var(--font-display)]"
                       >
-                        {mockSessions.length}
+                        {sessions.length}
                       </motion.div>
                     </div>
                   </Card>
@@ -145,7 +155,9 @@ export default function DashboardPage() {
                         transition={bouncy}
                         className="text-3xl font-bold font-[family-name:var(--font-display)]"
                       >
-                        {Math.round((avgFluency + avgGrammar + avgPronunciation) / 3)}%
+                        {avgFluency + avgGrammar + avgPronunciation > 0
+                          ? `${Math.round((avgFluency + avgGrammar + avgPronunciation) / 3)}%`
+                          : "—"}
                       </motion.div>
                     </div>
                   </Card>
@@ -190,7 +202,7 @@ export default function DashboardPage() {
                   animate="animate"
                   className="space-y-2"
                 >
-                  {mockSessions.map((session) => (
+                  {sessions.map((session) => (
                     <motion.div key={session.id} variants={listItem}>
                       <Card
                         variant="outlined"
@@ -200,27 +212,33 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                           <div className="flex items-center gap-2">
                             <Badge variant="default">{session.level}</Badge>
-                            <Badge variant={modeBadgeVariant[session.mode]}>
-                              {modeLabels[session.mode]}
+                            <Badge variant={modeBadgeVariant[session.mode] ?? "primary"}>
+                              {modeLabels[session.mode] ?? session.mode}
                             </Badge>
                           </div>
                           <div className="flex items-center gap-1.5 text-xs text-foreground/30">
                             <Calendar className="h-3 w-3" />
-                            {formatRelativeDate(session.startedAt)}
+                            {formatRelativeDate(session.started_at)}
                           </div>
                         </div>
                         <div className="flex gap-6 text-xs">
                           <div className="text-center">
                             <div className="text-foreground/30">{t("fluency")}</div>
-                            <div className="font-semibold text-primary-400 tabular-nums">{session.fluencyScore}%</div>
+                            <div className="font-semibold text-primary-400 tabular-nums">
+                              {session.fluency_score != null ? `${session.fluency_score}%` : "—"}
+                            </div>
                           </div>
                           <div className="text-center">
                             <div className="text-foreground/30">{t("grammar")}</div>
-                            <div className="font-semibold text-info tabular-nums">{session.grammarScore}%</div>
+                            <div className="font-semibold text-info tabular-nums">
+                              {session.grammar_score != null ? `${session.grammar_score}%` : "—"}
+                            </div>
                           </div>
                           <div className="text-center hidden sm:block">
                             <div className="text-foreground/30">{t("pronunciation")}</div>
-                            <div className="font-semibold text-accent-400 tabular-nums">{session.pronunciationScore}%</div>
+                            <div className="font-semibold text-accent-400 tabular-nums">
+                              {session.pronunciation_score != null ? `${session.pronunciation_score}%` : "—"}
+                            </div>
                           </div>
                         </div>
                       </Card>
@@ -230,22 +248,22 @@ export default function DashboardPage() {
               </div>
             </>
           ) : (
-            /* Empty state (Section 15) */
+            /* Empty state */
             <Card variant="glass" className="text-center py-16 space-y-4">
               <div className="w-16 h-16 rounded-2xl bg-primary-600/10 flex items-center justify-center mx-auto">
                 <MessageCircle className="h-8 w-8 text-foreground/30" />
               </div>
               <div className="space-y-2 max-w-xs mx-auto">
                 <h3 className="text-lg font-semibold font-[family-name:var(--font-display)]">
-                  Dein erstes Gespräch wartet
+                  {t("noSessions")}
                 </h3>
                 <p className="text-sm text-foreground/35">
-                  Start a conversation to begin your German journey. Pick a topic, choose your level, and just speak.
+                  {t("getStarted")}
                 </p>
               </div>
-              <Link href="/onboarding">
+              <Link href="/session">
                 <Button icon={<Sparkles className="h-4 w-4" />}>
-                  Start First Session
+                  {t("startFirst")}
                 </Button>
               </Link>
             </Card>

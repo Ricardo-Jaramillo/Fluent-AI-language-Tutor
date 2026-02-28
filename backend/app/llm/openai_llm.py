@@ -1,5 +1,7 @@
 """OpenAI LLM provider."""
 
+from collections.abc import AsyncIterator
+
 from openai import AsyncOpenAI
 
 from app.llm.base import BaseLLMProvider, ChatMessage, ChatResponse
@@ -37,6 +39,25 @@ class OpenAIProvider(BaseLLMProvider):
                 "completion_tokens": response.usage.completion_tokens,
             } if response.usage else None,
         )
+
+    async def stream_chat(
+        self,
+        messages: list[ChatMessage],
+        temperature: float = 0.7,
+        max_tokens: int = 1024,
+    ) -> AsyncIterator[str]:
+        """Stream chat tokens from OpenAI."""
+        stream = await self.client.chat.completions.create(
+            model=self.model,
+            messages=[{"role": m.role, "content": m.content} for m in messages],
+            temperature=temperature,
+            max_tokens=max_tokens,
+            stream=True,
+        )
+        async for chunk in stream:
+            delta = chunk.choices[0].delta.content
+            if delta:
+                yield delta
 
     async def analyze_pronunciation(
         self,

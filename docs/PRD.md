@@ -2,9 +2,17 @@
 
 ## 1. Overview
 
-Fluent is an AI-powered German learning application focused on spoken practice (Sprechen), covering levels A1 through C1. It uses open-source tools for speech processing and provides full phonetic (IPA) analysis from day one.
+Fluent is an AI-powered **multi-language** learning application focused on spoken practice, covering levels A1 through C1. It launches with **German** as the first target language, with **French, Spanish, Italian, and Portuguese** following. It uses open-source tools for speech processing and provides full phonetic (IPA) analysis from day one.
 
-The core thesis: German learners have plenty of grammar resources but almost no affordable, private, always-available conversation partners. Fluent fills that gap with AI-driven spoken practice that adapts to the learner's level, corrects in real time, and provides phonetic-level pronunciation feedback.
+The core thesis: language learners have plenty of grammar resources but almost no affordable, private, always-available conversation partners. Fluent fills that gap with AI-driven spoken practice that adapts to the learner's level, provides natural corrections without interrupting conversation flow, and delivers phonetic-level pronunciation feedback.
+
+### Key differentiators
+- **Multi-language support** — not locked to a single target language (unlike Loora, which is English-only)
+- **Open-source speech pipeline** — faster-whisper + Piper TTS run locally, no vendor lock-in
+- **IPA phoneme-level feedback** — deterministic pronunciation analysis, not LLM guessing
+- **Cultural/naturalness corrections** — flags phrases that are grammatically correct but sound unnatural
+- **Multi-LLM choice** — users pick their preferred AI provider
+- **Hybrid local+cloud architecture** — 100x cheaper than all-cloud, enabling an aggressive free tier
 
 ---
 
@@ -14,122 +22,227 @@ The core thesis: German learners have plenty of grammar resources but almost no 
 
 **Profile**: Has a grammar book (or Duolingo tree), knows basic vocabulary, but is intimidated by speaking. Understands "Ich bin..." but freezes when forming sentences aloud.
 
-**Needs**: Heavy scaffolding, repeat-after-me exercises, vocabulary drilling, encouragement.
+**Needs**: Heavy scaffolding, conversation starters, vocabulary drilling, encouragement.
 
 **Journey**:
-1. Signs up, selects A1
-2. Onboarding recommends **Guided Teaching** mode
-3. First session: repeat-after-me with "Hallo, ich heiße..." phrases
-4. IPA modal shows pronunciation of key words
-5. After 5-10 sessions, progresses to short 2-3 phrase exchanges in semi-guided Free Chat
-6. Dashboard shows improvement in pronunciation scores over time
+1. Signs up, selects target language (e.g., German) during onboarding
+2. Picks A1 level, sets goals (e.g., Travel, Daily Life)
+3. First session: sees conversation starters ("Hallo, ich heiße...", "Ich wohne in...")
+4. AI scaffolds heavily — keeps topics simple, suggests words
+5. Corrections appear as subtle dots on messages; tapping reveals what a native speaker would say
+6. IPA modal shows pronunciation of key words
+7. Post-session summary highlights 3 key takeaways
+8. After 5-10 sessions, progresses to longer exchanges as confidence builds
+9. Dashboard shows improvement in pronunciation scores and streak over time
 
 ### Persona B: "Intermediate Learner" (B1-B2)
 
-**Profile**: Can hold basic conversations, traveled to Germany, wants to refine grammar and expand vocabulary. Makes case errors and struggles with Konjunktiv II.
+**Profile**: Can hold basic conversations, traveled to a German-speaking country, wants to refine grammar and expand vocabulary. Makes case errors and struggles with Konjunktiv II.
 
-**Needs**: Natural conversation practice, grammar correction, topic-based vocabulary expansion.
+**Needs**: Natural conversation practice, non-interrupting grammar correction, topic-based vocabulary expansion.
 
 **Journey**:
-1. Signs up, selects B1
-2. Uses **Free Chat** for open conversation and **Real-Time Correction** for focused grammar work
-3. Notices recurring article errors flagged across sessions
-4. Switches to Guided Teaching for specific weak topics
+1. Signs up, selects target language and B1 level
+2. Uses conversation mode for open practice — AI responds naturally first, corrections come separately
+3. Taps correction dots on messages to see what a native speaker would say + explanation
+4. Notices recurring article errors flagged across sessions in dashboard error patterns
 5. Over weeks, correction frequency decreases as patterns are internalized
 
 ### Persona C: "Advanced Polisher" (C1)
 
 **Profile**: Near-fluent, works in a German-speaking environment. Wants to eliminate fossilized errors, improve register awareness, and sound more natural.
 
-**Needs**: Nuanced correction (style, idioms, colloquialisms), debate-level conversation, formal register practice.
+**Needs**: Nuanced correction (style, idioms, colloquialisms), debate-level conversation, cultural/naturalness feedback.
 
 **Journey**:
-1. Signs up, selects C1
-2. Primarily uses **Free Chat** at near-native level
-3. **Real-Time Correction** catches subtle errors: word order in subordinate clauses, Konjunktiv usage
-4. IPA analysis identifies persistent pronunciation patterns (e.g., CH-Laut variations)
-5. Dashboard tracks diminishing error rates across advanced categories
+1. Signs up, selects C1 level
+2. Engages in near-native conversation on complex topics
+3. AI catches subtle errors: word order in subordinate clauses, Konjunktiv usage
+4. Gets cultural corrections: "You said 'Ich bin kalt' — grammatically possible but Germans say 'Mir ist kalt'"
+5. IPA analysis identifies persistent pronunciation patterns (e.g., CH-Laut variations)
+6. Dashboard tracks diminishing error rates across advanced categories
 
 ---
 
 ## 3. Core Features
 
-### 3 Conversation Modes
+### Unified Conversation Mode
 
-1. **Free Chat**: Open-ended German conversation at the user's level. Post-session analysis shows errors and scores.
-2. **Real-Time Correction**: Split-screen UI with live corrections as the user speaks. Grammar and pronunciation errors highlighted inline.
-3. **Guided Teaching**: Structured lessons following the syllabus. AI presents vocabulary, example phrases, and conversation starters, then guides practice.
+Fluent uses a single **unified conversation mode** that adapts its behavior based on the learner's level. This replaces the previous 3-mode approach (Free Chat / Real-Time Correction / Guided Teaching) with a more natural experience.
 
-### Level-Adaptive Mode Behavior
+**How it works:**
+- The AI always responds naturally first — continuing the conversation, not interrupting with corrections
+- Corrections are extracted from the AI response and displayed separately using the **tap-to-fix** pattern
+- At lower levels (A1-A2), the AI provides more scaffolding, conversation starters, and simpler vocabulary
+- At higher levels (B2-C1), the AI engages in complex topics and catches nuanced errors
 
-This is the most critical design decision in Fluent. Each mode behaves fundamentally differently depending on the learner's level:
+### Level-Adaptive Behavior
 
-| Mode | A1 | A2 | B1 | B2 | C1 |
-|------|----|----|----|----|-----|
-| **Free Chat** | Semi-guided: 2-3 phrase exchanges. AI scaffolds heavily, suggests words, keeps topics simple. | Slightly longer exchanges. AI still scaffolds but expects more initiative. | True free chat begins. AI simplifies vocab when needed. | Natural conversation, complex topics, opinions. | Fully natural, near-native discussion. |
-| **Real-Time Correction** | Basic: articles (der/die/das), conjugation (ich bin/du bist). Very encouraging tone. | Cases, prepositions, plurals. Still encouraging. | Subtle grammar errors flagged. Word order issues. | Konjunktiv II, advanced word order, register awareness. | Style, colloquialisms, idioms, formal vs informal. |
-| **Guided Teaching** | Repeat-after-me, fill-in-the-blank, single words and short phrases. | Short sentence construction, simple dialogues. | Scenario-based role-play, opinion formation. | Discussion, argumentation, complex scenarios. | Debate, formal register, professional communication. |
+| Aspect | A1 | A2 | B1 | B2 | C1 |
+|--------|----|----|----|----|-----|
+| **Conversation** | Semi-guided: 2-3 phrase exchanges. AI scaffolds heavily, suggests words, keeps topics simple. | Slightly longer exchanges. AI still scaffolds but expects more initiative. | True open conversation begins. AI simplifies vocab when needed. | Natural conversation, complex topics, opinions. | Fully natural, near-native discussion. |
+| **Corrections** | Basic: articles (der/die/das), conjugation (ich bin/du bist). Very encouraging tone. | Cases, prepositions, plurals. Still encouraging. | Subtle grammar errors flagged. Word order issues. | Konjunktiv II, advanced word order, register awareness. | Style, colloquialisms, idioms, formal vs informal. |
+| **Naturalness** | Not flagged at this level. | Occasional tips on common phrases. | "Germans would more naturally say..." type feedback. | Cultural context, register switching. | Debate-level, professional register, idiomatic usage. |
+| **Starters** | Always shown: "Hallo, ich heiße...", "Ich wohne in..." | Available but optional. | Hidden by default. | Not shown. | Not shown. |
 
-**Key constraint**: A1-A2 learners cannot truly "free chat" — they lack the vocabulary. Free Chat at these levels is actually semi-guided with heavy AI scaffolding.
+### Tap-to-Fix Correction Pattern (Loora-inspired)
+
+The correction UX is designed to feel like optional coaching, not a grammar exam:
+
+- The AI response is displayed **clean** — no inline correction markers visible in the conversation
+- User messages show a small colored dot/badge when corrections exist
+- Tapping the dot opens a bottom sheet (mobile) or side panel (desktop) with:
+  - **What you said** vs. **What a native speaker would say**
+  - Brief explanation of why
+  - Per-word pronunciation scores (if IPA data exists)
+- Corrections are extracted from the LLM response using structured markers (`❌ → ✅` format) via `parseCorrections.ts`
+- If the LLM doesn't include corrections, the message shows no dot — no false indicators
+
+### Cultural & Naturalness Corrections
+
+Beyond grammar, Fluent flags phrases that are grammatically correct but sound unnatural to native speakers:
+- "You said 'Ich bin kalt' — grammatically possible but Germans say 'Mir ist kalt'"
+- "You said 'Ich habe Angst von Spinnen' — Germans say 'Ich habe Angst vor Spinnen'"
+- These appear in the tap-to-fix panel alongside grammar corrections, tagged as "naturalness" feedback
 
 ### Phonetic Analysis (IPA)
 
 - Every user utterance is analyzed for pronunciation
-- Low-confidence words from STT are flagged
-- IPA comparison: what user said vs correct pronunciation
+- Low-confidence words from STT are flagged with severity based on confidence score
+- IPA transcription: correct form generated by eSpeak-NG (deterministic)
 - Clickable words open modal with IPA details and audio playback
 - LLM generates natural language explanation of differences
 
 ### Progress Tracking
 
 - Per-session scores: fluency, grammar, pronunciation
-- Per-topic/module/level progress aggregation
+- Grammar and pronunciation errors persisted to DB across sessions
+- Error pattern analysis: recurring mistakes highlighted on dashboard
+- Daily streak tracking with milestone celebrations
+- Per-topic progress aggregation via `progress` table
 - Session history with filters
-- Error pattern visualization
+
+### Multi-Language Target Selection
+
+- **Target languages**: German (launch), French, Spanish, Italian, Portuguese (expandable)
+- Users select their target language during onboarding
+- Target language determines: STT language, TTS voices, IPA analysis language, system prompts, conversation starters, and topic suggestions
+- Target language can be changed in settings (Pro tier: any language; Free tier: German only)
 
 ### Multi-Language UI
 
 - Interface available in English, Spanish, French, German
-- AI agent always speaks German regardless of UI language
-- User can switch language in settings
+- AI agent speaks in the user's **target language** (not tied to UI language)
+- User can switch UI language in settings independently of target language
 
 ### Multi-LLM Support
 
-- Default: DeepSeek V3 (cheapest)
-- Also supports: Claude, OpenAI, Gemini
+- Default: DeepSeek V3 (cheapest, free tier only)
+- Also supports: Claude, OpenAI, Gemini (Pro tier)
 - Configurable per-user in settings
 
 ---
 
-## 4. Tech Stack
+## 4. Onboarding Flow
 
-- **Frontend**: Next.js 15, Tailwind CSS v4, Framer Motion, Zustand, next-intl
-- **Backend**: Python FastAPI, WebSockets
-- **STT**: faster-whisper (local, Apple Silicon optimized)
-- **TTS**: Piper TTS (local, German voices)
-- **IPA**: eSpeak-NG + Phonemizer (local, deterministic)
-- **LLM**: Multi-provider (DeepSeek, Claude, OpenAI, Gemini)
-- **Database**: Supabase PostgreSQL with Row Level Security
-- **Auth**: Supabase Auth with auto-profile creation trigger
+New users go through a 4-step onboarding wizard (Loora-inspired) after signup:
+
+### Step 1: Target Language
+- Visual cards for each supported language (German, French, Spanish, Italian, Portuguese)
+- Each card shows the language name + flag icon
+- Single selection, defaults to German
+
+### Step 2: Level
+- A1 through C1 with plain-language descriptions:
+  - A1: "I know a few words"
+  - A2: "I can handle basic conversations"
+  - B1: "I can talk about familiar topics"
+  - B2: "I can discuss complex subjects"
+  - C1: "I'm nearly fluent"
+- Tappable cards, one selection
+
+### Step 3: Goals
+- Multi-select chips: Travel, Work, Study, Daily Life, Culture, Exam Prep
+- These influence topic suggestions and system prompt context
+- At least one required
+
+### Step 4: Welcome
+- Encouraging message acknowledging speaking anxiety
+- "Many people are nervous about speaking a new language. That's completely normal. Fluent is your private, judgment-free practice partner."
+- "Start your first session" CTA button
+
+**Data persistence**: All selections saved to Supabase `profiles` table (`target_language`, `level`, `goals`).
+
+**Flow**: Signup → Onboarding → Dashboard (first-time) / Session (returning user)
 
 ---
 
-## 5. IPA Architecture Rationale
+## 5. Monetization
+
+### Freemium Model
+
+| Feature | Free | Pro ($9.99/mo) |
+|---------|------|----------------|
+| Sessions per day | 3 | Unlimited |
+| Target languages | 1 (German) | All 5 |
+| LLM providers | DeepSeek only | All 4 (DeepSeek, Claude, OpenAI, Gemini) |
+| Session length | 10 min max | Unlimited |
+| Error history | Last 7 days | All time |
+| Priority support | No | Yes |
+
+### Payment Infrastructure
+- **Stripe Checkout** (hosted page) — minimizes frontend complexity
+- **Stripe Customer Portal** — for subscription management (cancel, update payment)
+- **Webhook-driven** — subscription state synced via Stripe webhooks to `subscriptions` table
+- `subscription_status` field on `profiles` for quick tier checks
+
+### Free Tier Enforcement
+- Session count tracked per user per day in backend
+- When limit reached: clear upgrade prompt with pricing and "Upgrade to Pro" CTA
+- WebSocket connection rejected with specific code when daily limit exceeded
+- Rate limiting: 30 msg/min per user on WS, 10 req/min on HTTP endpoints
+
+### Upgrade UX
+- Upgrade prompt shown when limit hit (modal with pricing breakdown)
+- Pro badge in navbar for subscribed users
+- Pricing page accessible from landing page and settings
+
+---
+
+## 6. Tech Stack
+
+- **Frontend**: Next.js 15, Tailwind CSS v4, Framer Motion, Zustand, next-intl, lucide-react
+- **Backend**: Python FastAPI, WebSockets
+- **STT**: faster-whisper (local, Apple Silicon optimized, multi-language)
+- **TTS**: Piper TTS (local, multi-language voice registry) with eSpeak-NG fallback
+- **IPA**: eSpeak-NG + Phonemizer (local, deterministic, multi-language)
+- **LLM**: Multi-provider (DeepSeek, Claude, OpenAI, Gemini)
+- **Database**: Supabase PostgreSQL with Row Level Security
+- **Auth**: Supabase Auth with auto-profile creation trigger
+- **Payments**: Stripe Checkout + Webhooks
+- **Monitoring**: Structured JSON logging + Sentry
+- **CI/CD**: GitHub Actions
+
+---
+
+## 7. IPA Architecture Rationale
 
 ### Why not use LLMs for IPA?
 
-Research (PhonologyBench and others) demonstrates that LLMs consistently fail at German IPA transcription. They hallucinate phonemes, especially for:
-- CH-Laut variations (/x/ vs /c/)
+Research (PhonologyBench and others) demonstrates that LLMs consistently fail at IPA transcription. They hallucinate phonemes, especially for:
+- CH-Laut variations (/x/ vs /c/) in German
 - Umlauts (o vs oe)
 - Vowel length distinctions
 - Consonant clusters (e.g., "Strumpf" /StrUmpf/)
+- Nasal vowels in French
+- Rolled R variations across languages
 
 ### The deterministic pipeline
 
 ```
 User speaks -> faster-whisper (STT + word-level timestamps + confidence scores)
-  -> Low-confidence words flagged
-  -> eSpeak-NG + Phonemizer generates IPA for both spoken and correct forms
+  -> Low-confidence words flagged (severity by confidence score)
+  -> eSpeak-NG + Phonemizer generates correct IPA form
   -> LLM ONLY explains differences in natural language (what it's good at)
   -> Piper TTS generates correct pronunciation audio
   -> Frontend renders clickable IPA modal
@@ -137,13 +250,15 @@ User speaks -> faster-whisper (STT + word-level timestamps + confidence scores)
 
 **Key principle**: eSpeak-NG produces deterministic, correct IPA. The LLM's role is limited to generating human-readable explanations of the differences — a task where it excels.
 
+**Note**: The spoken IPA is inherently unknown from STT text alone. Low-confidence words are flagged based on STT confidence scores, not IPA-to-IPA comparison.
+
 ### Future enhancement
 
 Montreal Forced Aligner for phone-level temporal alignment, enabling per-phoneme feedback within individual words.
 
 ---
 
-## 6. Latency & Streaming Architecture
+## 8. Latency & Streaming Architecture
 
 ### Pipeline breakdown
 
@@ -161,7 +276,7 @@ TTS synthesis begins as soon as the first complete sentence arrives from the LLM
 ### Targets
 
 - **MVP**: ~2-3s perceived latency (speech end to first audio response)
-- **Phase 2**: Deepgram streaming STT reduces STT to ~200ms chunks, bringing total to ~1.5-2.5s
+- **Future**: Deepgram streaming STT reduces STT to ~200ms chunks, bringing total to ~1.5-2.5s
 
 ### WebSocket architecture
 
@@ -169,14 +284,18 @@ Single persistent WebSocket per session handles:
 1. Audio chunks (user -> server)
 2. Transcription results (server -> client)
 3. LLM response tokens (server -> client, streamed)
-4. TTS audio chunks (server -> client, streamed)
+4. TTS audio chunks (server -> client, binary)
 5. IPA analysis results (server -> client)
+6. Configuration messages (language, level, provider)
+7. Keepalive ping/pong
+
+**Authentication**: Client sends Supabase JWT as query parameter on WebSocket connect. Backend validates JWT using Supabase's JWKS or service-role key. On failure, connection closed with code 4001. Frontend gets JWT from `supabase.auth.getSession()` and refreshes before connecting.
 
 ---
 
-## 7. Realistic Learning Timeline
+## 9. Realistic Learning Timeline
 
-German requires approximately 750 hours of study to reach C1 from zero (FSI estimate). Fluent covers spoken practice, which is one component of the learning process.
+Language learning requires significant time investment. Fluent covers spoken practice, which is one component of the learning process.
 
 | Level | Hours of spoken practice | Cumulative |
 |-------|-------------------------|------------|
@@ -186,11 +305,11 @@ German requires approximately 750 hours of study to reach C1 from zero (FSI esti
 | B2 | 40-60 hours | 230-310 |
 | C1 | 30-90 hours | 260-400 |
 
-**No rigid timelines**: Fluent uses Level > Module > Topics progression, entirely self-paced. A motivated learner doing 30min/day could reach B1 in ~6 months. A casual learner at 15min/day might take 12+ months.
+**No rigid timelines**: Fluent uses Level > Topic progression, entirely self-paced. A motivated learner doing 30min/day could reach B1 in ~6 months. A casual learner at 15min/day might take 12+ months.
 
 ---
 
-## 8. Cost Considerations
+## 10. Cost Considerations
 
 ### Why hybrid (local + cloud)?
 
@@ -199,38 +318,38 @@ German requires approximately 750 hours of study to reach C1 from zero (FSI esti
 | All-cloud (Deepgram + ElevenLabs + Claude) | $0.60-$1.80 | $18-54 |
 | Hybrid (local STT/TTS/IPA + DeepSeek) | ~$0.005 | ~$0.15 |
 
-The hybrid approach is **120-360x cheaper** while maintaining quality for the core learning experience.
+The hybrid approach is **120-360x cheaper** while maintaining quality for the core learning experience. This cost advantage enables an aggressive free tier (3 sessions/day) that would be impossible with an all-cloud stack.
 
-### Current costs (Phase 1)
+### Current costs
 
 | Service | Cost | Notes |
 |---------|------|-------|
 | faster-whisper | $0 | Local, Apple Silicon |
-| Piper TTS | $0 | Local, German voices |
+| Piper TTS | $0 | Local, multi-language voices |
 | eSpeak-NG + Phonemizer | $0 | Local, deterministic |
 | DeepSeek V3 | ~$0.005/session | $0.14/M input, $0.28/M output |
-| Supabase Local | $0 | Dev via CLI + Docker |
-| **Total (dev)** | **~$0.15/mo** | Only LLM costs |
-| **Total (prod)** | **~$25.15/mo** | Supabase Pro ($25) + LLM |
+| Supabase Pro | $25/mo | Cloud PostgreSQL with RLS |
+| Stripe | 2.9% + $0.30/txn | Only on Pro subscriptions |
+| **Total (prod, pre-revenue)** | **~$25.15/mo** | Supabase + LLM |
 
 ### Cacheability
 
-Teaching mode responses for common topics (A1 greetings, A1 numbers, etc.) are highly cacheable. The same vocabulary drills and example phrases can be reused across users, further reducing LLM costs.
+Common conversation starters and vocabulary drills (A1 greetings, A1 numbers, etc.) are highly cacheable. The same example phrases can be reused across users, further reducing LLM costs.
 
 ### Upgrade paths
 
 1. **STT**: faster-whisper -> Deepgram Streaming ($0.0043/min, lower latency)
-2. **TTS**: Piper TTS -> ElevenLabs ($5+/mo, more natural voices)
+2. **TTS**: Piper TTS -> ElevenLabs ($5+/mo, more natural voices) — potential Pro-tier perk
 3. **LLM**: DeepSeek V3 -> Claude Haiku (quality) -> Claude Sonnet (best)
-4. **DB**: Supabase Local -> Supabase Pro ($25/mo) -> Team ($599/mo)
+4. **DB**: Supabase Pro ($25/mo) -> Supabase Team ($599/mo) at scale
 
 ---
 
-## 9. Future Mode: Active Vocabulary
+## 11. Future Mode: Active Vocabulary
 
-A 4th mode for isolated word and phrase pronunciation practice — audio flashcards.
+A future mode for isolated word and phrase pronunciation practice — audio flashcards.
 
-**Rationale**: A1-A2 learners need to build vocabulary before they can converse. Current modes all assume some ability to form sentences. Active Vocabulary bridges the gap.
+**Rationale**: A1-A2 learners need to build vocabulary before they can converse fluently. Active Vocabulary bridges the gap.
 
 **Features**:
 - Audio flashcard format: hear word -> repeat -> get IPA feedback
@@ -239,47 +358,57 @@ A 4th mode for isolated word and phrase pronunciation practice — audio flashca
 - Vocabulary sourced from syllabus topics
 - "Warm-up" option before conversation sessions
 
-**Implementation**: Phase 2. Uses existing eSpeak-NG, Phonemizer, and Piper TTS — only needs a new frontend mode and a spaced repetition scheduler.
-
 ---
 
-## 10. Syllabus
+## 12. Syllabus
 
 - 5 levels: A1, A2, B1, B2, C1
 - 72 topics across 12 modules
 - Each topic: 10-15 vocabulary words, 3-5 example phrases, 2-3 conversation starters
 - Includes pronunciation focus modules per level
 - Mix of everyday and professional contexts
+- **Dynamic topic suggestions**: TopicChips adapt based on target language and level
 
 ---
 
-## 11. Architecture
+## 13. Architecture
 
 ```
-User speaks -> faster-whisper (STT + word timestamps)
+User speaks -> faster-whisper (STT + word timestamps, language-aware)
     -> Transcribed text + confidence scores
-    -> Low-confidence words flagged
-    -> eSpeak-NG generates IPA (spoken vs correct)
-    -> LLM explains differences
-    -> Piper TTS generates correct audio
-    -> Frontend renders clickable IPA modal
+    -> Low-confidence words flagged (severity by confidence)
+    -> eSpeak-NG generates correct IPA (target language)
+    -> LLM responds naturally + includes structured corrections
+    -> parseCorrections.ts extracts corrections, cleans AI response
+    -> Piper TTS generates audio (target language voice)
+    -> Frontend renders clean conversation + tap-to-fix dots
+    -> Backend persists messages, grammar_errors, pronunciation_errors to DB
 ```
 
 ---
 
-## 12. Database Schema
+## 14. Database Schema
 
-6 tables with Row Level Security:
-- `profiles` - User profile extending Supabase Auth
-- `sessions` - Conversation sessions with scores
-- `messages` - Individual messages per session
-- `pronunciation_errors` - IPA analysis per word
-- `grammar_errors` - Grammar corrections
-- `progress` - Per-topic progress tracking
+8 tables with Row Level Security:
+
+- `profiles` — User profile extending Supabase Auth (includes `target_language`, `level`, `goals`, `subscription_status`)
+- `sessions` — Conversation sessions with scores (includes `target_language`, `mode` supports `'unified'`)
+- `messages` — Individual messages per session
+- `pronunciation_errors` — IPA analysis per word (persisted by backend)
+- `grammar_errors` — Grammar corrections (persisted by backend)
+- `progress` — Per-topic progress tracking (upserted after session end)
+- `subscriptions` — Stripe subscription records
+- `streaks` — Daily practice streak tracking
+
+### Key constraints
+- `sessions.mode` CHECK: `('chat', 'correction', 'teaching', 'unified')` — unified is the active mode
+- All tables have RLS policies scoped to `auth.uid()`
+- Backend writes via service-role client (bypasses RLS for persistence)
+- Frontend reads via client-side Supabase (with RLS)
 
 ---
 
-## 13. Performance Requirements
+## 15. Performance Requirements
 
 ### Backend targets
 
@@ -289,6 +418,7 @@ User speaks -> faster-whisper (STT + word timestamps)
 | LLM first token | < 500ms | DeepSeek V3 via API |
 | TTS synthesis | < 500ms | Short response sentences |
 | Total perceived latency | < 3s | Speech end to first audio |
+| WS connections | 50+ concurrent | Without degradation |
 
 ### Frontend targets
 
@@ -301,7 +431,7 @@ User speaks -> faster-whisper (STT + word timestamps)
 
 ---
 
-## 14. Error Handling & Fallbacks
+## 16. Error Handling & Fallbacks
 
 | Failure | Fallback |
 |---------|----------|
@@ -309,38 +439,45 @@ User speaks -> faster-whisper (STT + word timestamps)
 | LLM timeout (>10s) | Retry once, then fallback to alternate provider |
 | LLM provider error | Automatic fallback: DeepSeek -> OpenAI -> Claude |
 | TTS synthesis fails | Display text response only, skip audio |
+| TTS voice unavailable for language | Fall back to eSpeak-NG (lower quality but functional) |
 | WebSocket disconnect | Auto-reconnect with exponential backoff (1s, 2s, 4s, 8s, max 30s) |
+| WS auth token expired | Frontend refreshes JWT, reconnects with new token |
 | Offline | Local session data persists, sync on reconnect |
 | Mic permission denied | Clear error message with browser-specific instructions |
 | Audio format unsupported | Convert to WAV client-side before sending |
+| Correction parsing fails | Show raw AI response without tap-to-fix dots (graceful degradation) |
+| Daily session limit reached | Upgrade prompt modal with pricing |
 
 ---
 
-## 15. Security & Privacy
+## 17. Security & Privacy
 
 - **Audio storage**: Raw audio is NOT stored on the server. Only transcriptions are persisted.
-- **GDPR compliance**: Full data export and account deletion endpoints
+- **GDPR compliance**: Full data export and account deletion endpoints (`DELETE /api/account` removes all user data)
 - **API keys**: Never exposed to the frontend. All LLM/service calls go through the backend.
-- **WebSocket auth**: Authenticated via Supabase JWT token on connection
+- **WebSocket auth**: JWT token validated on connection via Supabase JWKS. Unauthenticated connections rejected with code 4001.
 - **Row Level Security**: All database tables enforce user-scoped access
 - **Input sanitization**: All user text inputs sanitized before LLM prompts
-- **Rate limiting**: Per-user rate limits on API endpoints to prevent abuse
+- **Rate limiting**: Per-user rate limits — 30 msg/min on WS, 10 req/min on HTTP endpoints
+- **Usage limits**: Free tier enforced server-side (3 sessions/day, 10 min max)
+- **Stripe security**: Webhook signature verification, no card data touches our servers
 
 ---
 
-## 16. Accessibility
+## 18. Accessibility
 
 - **Target**: WCAG 2.1 AA compliance
 - **Reduced motion**: All animations respect `prefers-reduced-motion` via Framer Motion's `useReducedMotion`
-- **ARIA labels**: Mic button states (idle, recording, processing), live regions for incoming messages
-- **Keyboard navigation**: Full keyboard support for all interactive elements
+- **ARIA labels**: Mic button states (idle, recording, processing), live regions for incoming messages, correction dot descriptions
+- **Keyboard navigation**: Full keyboard support for all interactive elements including tap-to-fix panels
 - **Screen reader**: Session messages announced via `aria-live="polite"` regions
 - **Color contrast**: All text meets 4.5:1 minimum contrast ratio against backgrounds
 - **Focus indicators**: Visible focus rings on all interactive elements
+- **Mobile**: Responsive at 375px+ (iPhone SE baseline)
 
 ---
 
-## 17. Success Metrics
+## 19. Success Metrics
 
 ### Engagement
 
@@ -349,7 +486,7 @@ User speaks -> faster-whisper (STT + word timestamps)
 | Sessions per week | >= 3 |
 | Average session duration | 10-15 min |
 | Messages per session | >= 10 |
-| Mode distribution | No mode < 15% usage |
+| Tap-to-fix interaction rate | >= 40% of messages with corrections |
 
 ### Retention
 
@@ -358,6 +495,7 @@ User speaks -> faster-whisper (STT + word timestamps)
 | D1 retention | >= 60% |
 | D7 retention | >= 40% |
 | D30 retention | >= 25% |
+| Streak maintenance (7+ days) | >= 30% of active users |
 
 ### Learning outcomes
 
@@ -365,7 +503,16 @@ User speaks -> faster-whisper (STT + word timestamps)
 |--------|--------|
 | Score improvement over 10 sessions | >= 5% |
 | Pronunciation error reduction per topic | >= 20% after 5 sessions |
-| Module completion rate | >= 50% of started modules |
+| Recurring error pattern reduction | >= 15% after pattern is surfaced |
+
+### Monetization
+
+| Metric | Target |
+|--------|--------|
+| Free-to-Pro conversion rate | >= 5% |
+| Monthly churn rate | < 8% |
+| Average revenue per user (ARPU) | $0.50+ |
+| Payback period | < 3 months |
 
 ### Technical
 
@@ -378,172 +525,245 @@ User speaks -> faster-whisper (STT + word timestamps)
 
 ---
 
-## 18. User Flows
+## 20. User Flows
 
-### Onboarding flow
+### Onboarding flow (new users)
 ```
-Landing -> Auth (Sign Up / Sign In) -> Select Level -> Select Module -> Select Topic -> Select Mode -> Session
+Landing -> Auth (Sign Up) -> Onboarding Wizard (Language -> Level -> Goals -> Welcome)
+  -> Dashboard (first time)
+```
+
+### Returning user flow
+```
+Landing -> Auth (Sign In) -> Dashboard -> Start Session -> Session
 ```
 
 ### Session flow
 ```
-Session Start -> Record (hold mic) -> STT Processing -> LLM Response (streamed)
-  -> TTS Playback -> IPA Analysis (clickable words) -> Continue / End Session
-  -> End -> Score Summary -> Dashboard
+Session Start -> [Conversation Starters shown for A1-A2]
+  -> Record (hold mic) or Type -> STT Processing -> LLM Response (natural)
+  -> TTS Playback -> Correction dots appear on user messages
+  -> Tap dot -> Bottom sheet with corrections + IPA
+  -> Continue conversation or End Session
+  -> End -> Post-Session Summary (key takeaways + streak + scores)
+  -> Dashboard
 ```
 
 ### Progress review flow
 ```
 Dashboard -> Session History -> Session Detail -> Error Review -> IPA Modal -> TTS Replay
+Dashboard -> Error Patterns -> Recurring mistakes across sessions
+Dashboard -> Streak & Milestones
 ```
 
 ### Settings flow
 ```
-Settings -> Language / LLM Provider / Theme -> Save -> Toast confirmation
+Settings -> UI Language / Target Language / LLM Provider / Theme / TTS Voice -> Save -> Toast
+Settings -> Account -> Delete Account -> Confirmation -> Full data deletion
+Settings -> Subscription -> Stripe Customer Portal
+```
+
+### Upgrade flow
+```
+Free user hits daily limit -> Upgrade Prompt Modal -> Pricing Page -> Stripe Checkout
+  -> Success -> Pro features unlocked immediately
+```
+
+### Password reset flow
+```
+Auth page -> "Forgot password?" -> Enter email -> Supabase sends reset link
+  -> User clicks link -> New password form -> Success -> Redirect to Sign In
 ```
 
 ---
 
-## 19. Phase 2 Roadmap (Near-term)
+## 21. Gamification & Engagement
 
-### Conversation Starter Chips
-Tappable suggestion chips for A1-A2 learners ("Hallo, ich bin...", "Ich wohne in...", "Ich mag..."). Reduces blank-page anxiety when learners don't know how to start.
+### Daily Streaks
+- Consecutive day count of sessions completed
+- Visual streak badge on dashboard and navbar
+- Streak-at-risk notification: "Don't lose your 7-day streak! Practice today."
+- Streak info shown in post-session summary
 
-### Voice Level Indicator
-Real-time volume meter during recording so users can confirm their microphone is working and adjust speaking volume.
-
-### Session Warm-Up
-30-second "Repeat after me: Guten Tag!" warm-up before the main conversation. Eases learners in, calibrates the microphone, and reduces first-message anxiety.
+### Milestones
+- **First Session** — "You took the first step!"
+- **7-Day Streak** — "One week of consistent practice!"
+- **10 Sessions** — "Getting into the groove"
+- **Perfect Pronunciation** — "Nailed it! Perfect score on a word"
+- **100 Words Practiced** — "Building your vocabulary"
+- Milestone celebrations shown as toast notifications
 
 ### Error Pattern Intelligence
-Track recurring errors across sessions. Proactively suggest targeted review: "You've made article errors in 4 sessions — practice der/die/das?" Surfaces patterns the learner might not notice.
-
-### Contextual Help Tooltips
-First-time user tooltips on UI elements (mic button, IPA modal, mode selection). Dismissible, never shows again after dismissal. Critical for making the IPA modal discoverable.
-
-### Active Vocabulary Mode
-Audio flashcards for isolated word pronunciation practice (see Section 9).
+- Track recurring errors across sessions in `grammar_errors` and `pronunciation_errors` tables
+- Dashboard section: "Your most common patterns" with frequency counts
+- Proactively suggest targeted review: "You've made article errors in 4 sessions — practice der/die/das?"
+- Surfaces patterns the learner might not notice on their own
 
 ---
 
-## 20. Phase 3 Roadmap (Future)
+## 22. Multi-Language Engine Support
 
-### Gamification Layer
-Daily streaks, XP points, level-up celebrations, achievement badges ("First Session", "7-Day Streak", "Perfect Pronunciation", "100 Words Practiced"). Drives daily engagement.
+### Speech-to-Text (STT)
+- faster-whisper supports all target languages natively
+- Language parameter passed via WebSocket config message
+- No model changes needed — Whisper is multilingual
 
-### Visual Progress Map
-Winding path through the syllabus with German landmarks (Brandenburg Gate, Neuschwanstein, etc.). More elegant than a linear skill tree. Each node is a topic, color-coded by completion state.
+### Text-to-Speech (TTS)
+- **Voice registry** maps language codes to Piper voice models
+- Languages with high-quality Piper voices: German (`de_DE-*`), French, Spanish
+- Languages without Piper voices: fall back to eSpeak-NG (lower quality but functional)
+- Voice selection exposed in settings (Pro tier gets all voices)
+- Future: ElevenLabs API for Pro tier (highest quality, higher cost)
 
-### Session Replay
-Replay full session transcript with synchronized audio. Click any message to hear the spoken version vs the correct pronunciation. Valuable for self-review.
+### IPA Analysis
+- eSpeak-NG + Phonemizer already support all target languages
+- Language parameter passed through the analysis pipeline
+- No code changes needed in `ipa/engine.py` — already accepts `language` param
 
-### Sound Design
-UI sounds for key interactions: "pop" on recording start, "ding" on good pronunciation score, "whoosh" on page transitions, subtle "click" on button presses. All sounds respect system mute/volume settings.
-
-### Haptic Micro-Interactions
-Weighty-feeling toggles, cards that "lift" on hover, physical mic button press feedback. Uses CSS transforms and spring animations to create a premium, physical-feeling interface.
-
-### Streaming STT Upgrade
-Replace faster-whisper batch processing with Deepgram streaming STT for real-time transcription as the user speaks. Reduces perceived latency significantly.
-
-### Natural TTS Upgrade
-Replace Piper TTS with ElevenLabs for more natural-sounding German voices. Higher cost but dramatically better user experience for advanced learners.
-
-### Mobile App
-React Native or PWA for mobile access. Core conversation flow works on mobile, optimized for one-handed mic-button usage.
-
-### CI/CD Pipeline
-Automated testing, linting, and deployment. GitHub Actions for backend tests, frontend build verification, and Supabase migration checks.
-
-### Spaced Repetition Engine
-Track individual word/phrase performance across sessions. Schedule reviews using SM-2 algorithm. Integrate with Active Vocabulary mode for targeted repetition.
+### System Prompts
+- `prompts.ts` generates language-aware prompts
+- Target language determines:
+  - Which language the AI converses in
+  - Cultural correction examples relevant to that language
+  - Level-appropriate conversation starters
+  - Topic suggestions contextualized to the language
 
 ---
 
-## 21. Implementation Status
+## 23. Future Roadmap
 
-*Last updated: February 27, 2026*
+### Near-term (post-launch)
+- **Active Vocabulary Mode** — Audio flashcards for isolated word pronunciation practice (see Section 11)
+- **Streaming LLM Responses** — Stream tokens for perceived latency improvement
+- **Voice Level Indicator** — Real-time volume meter during recording
+- **Session Warm-Up** — 30-second "Repeat after me" warm-up before main conversation
+- **Contextual Help Tooltips** — First-time user tooltips on UI elements
+
+### Medium-term
+- **Visual Progress Map** — Winding path through the syllabus with language-specific landmarks
+- **Session Replay** — Replay full session transcript with synchronized audio
+- **Spaced Repetition Engine** — SM-2 algorithm for vocabulary review scheduling
+- **Sound Design** — UI sounds for key interactions (respecting system mute)
+- **ElevenLabs TTS** — Premium natural voices for Pro tier
+
+### Long-term
+- **Mobile App** — React Native or PWA for mobile access
+- **Additional Languages** — Japanese, Korean, Mandarin (requires CJK-specific IPA handling)
+- **Streaming STT** — Deepgram streaming for real-time transcription
+- **Group Sessions** — Practice with other learners, AI-moderated
+- **Tutor Marketplace** — Connect with human tutors for advanced practice
+
+---
+
+## 24. Implementation Status
+
+*Last updated: March 2, 2026*
 
 ### Legend
 - **WORKING** — Feature is fully implemented and validated end-to-end
 - **PARTIAL** — Core logic exists but integration or edge cases are incomplete
+- **IN PROGRESS** — Actively being developed in current sprint
 - **NOT STARTED** — Planned but no code yet
+- **DEPRECATED** — Superseded by unified mode; code exists but will be removed
 
 ### Backend
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 1 | Health endpoint (`/api/health`) | WORKING | Returns status, version, eSpeak availability. Tested. |
-| 2 | Chat API (`/api/chat`) | WORKING | All 4 LLM providers (DeepSeek, Claude, OpenAI, Gemini) fully implemented. |
-| 3 | IPA analysis API (`/api/ipa/analyze`) | WORKING | eSpeak-NG integration, word-by-word IPA transcription. |
+| 1 | Health endpoint (`/api/health`) | WORKING | Returns status, version, eSpeak availability. |
+| 2 | Chat API (`/api/chat`) | WORKING | All 4 LLM providers (DeepSeek, Claude, OpenAI, Gemini). |
+| 3 | IPA analysis API (`/api/ipa/analyze`) | WORKING | eSpeak-NG integration, word-by-word IPA transcription. Multi-language. |
 | 4 | IPA comparison API (`/api/ipa/compare`) | WORKING | Compares spoken vs correct IPA with severity levels. |
-| 5 | TTS endpoint (`/api/tts`) | WORKING | Piper TTS with eSpeak-NG fallback, returns WAV audio. Tested (4 tests). |
-| 6 | WebSocket handler (`/ws/conversation`) | WORKING | Text + audio + config + ping/pong. Full pipeline: audio → STT → IPA → LLM → response. Tested (10 tests). |
-| 7 | STT engine (faster-whisper) | WORKING | Transcription with word-level timestamps and confidence scores. Connected to WebSocket handler. |
-| 8 | TTS engine (Piper) | WORKING | Synthesize with model validation, input encoding, returncode checking. Piper → eSpeak-NG fallback chain. |
-| 9 | IPA engine (eSpeak-NG) | WORKING | Deterministic IPA transcription, pronunciation comparison, severity levels (minor/moderate/severe). |
-| 10 | LLM provider factory | WORKING | Factory pattern with 4 providers. Validated API keys. Tested. |
-| 11 | Backend tests | WORKING | 37 tests across 9 test files: health, IPA (5), IPA integration (3), LLM factory (5), STT (5), TTS (4), TTS endpoint (4), WS audio (4), WS text (6). |
+| 5 | TTS endpoint (`/api/tts`) | WORKING | Piper TTS with eSpeak-NG fallback, returns WAV audio. |
+| 6 | WebSocket handler (`/ws/conversation`) | WORKING | Text + audio + config + ping/pong. Full pipeline: audio → STT → IPA → LLM → response. |
+| 7 | STT engine (faster-whisper) | WORKING | Transcription with word-level timestamps and confidence scores. **Bug: hardcoded to `language="de"`**. |
+| 8 | TTS engine (Piper) | WORKING | Synthesize with model validation. **Bug: German-only voices**. |
+| 9 | IPA engine (eSpeak-NG) | WORKING | Deterministic IPA transcription, severity levels. Already multi-language. |
+| 10 | LLM provider factory | WORKING | Factory pattern with 4 providers. Validated API keys. |
+| 11 | Backend tests | WORKING | 40 tests across 9 test files. Target: 80+. |
+| 12 | WebSocket JWT auth | NOT STARTED | No authentication on WS connections. **Critical bug.** |
+| 13 | DB error persistence | NOT STARTED | grammar_errors + pronunciation_errors never written by backend. |
+| 14 | Rate limiting | NOT STARTED | No per-user rate limits. |
+| 15 | Account deletion endpoint | NOT STARTED | No `DELETE /api/account` route. |
+| 16 | Multi-language TTS voice registry | NOT STARTED | No voice mapping by language. |
+| 17 | Stripe billing routes | NOT STARTED | No payment infrastructure. |
+| 18 | Structured logging + Sentry | NOT STARTED | No production monitoring. |
 
 ### Frontend-Backend Integration
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 12 | API client (`lib/api.ts`) | WORKING | BACKEND_URL config, `getWsUrl()` helper. Respects `NEXT_PUBLIC_BACKEND_URL`. |
-| 13 | WebSocket client (`hooks/useWebSocket.ts`) | WORKING | Auto-reconnect with exponential backoff, ping/pong keepalive, binary support, visibility-aware. |
-| 14 | Audio capture (`hooks/useAudioCapture.ts`) | WORKING | getUserMedia + MediaRecorder, WebM/Opus encoding, permission handling, stream cleanup. |
-| 15 | Audio streaming to backend | WORKING | Mic → MediaRecorder → `audio_start` message → binary blob via WebSocket. |
-| 16 | LLM response rendering | WORKING | WebSocket `response` messages → `addMessage()` → MessageBubble with animations. |
-| 17 | TTS audio playback (`lib/audio.ts`) | WORKING | Fetches `/api/tts`, plays via HTMLAudioElement, state tracking, stop/cleanup. |
-| 18 | System prompts (`lib/prompts.ts`) | WORKING | Mode-aware prompt builder: chat/correction/teaching with level and topic context. |
+| 19 | API client (`lib/api.ts`) | WORKING | BACKEND_URL config, `getWsUrl()` helper. |
+| 20 | WebSocket client (`hooks/useWebSocket.ts`) | WORKING | Auto-reconnect, keepalive, binary support. **Needs JWT auth param.** |
+| 21 | Audio capture (`hooks/useAudioCapture.ts`) | WORKING | getUserMedia + MediaRecorder, WebM/Opus encoding. |
+| 22 | Audio streaming to backend | WORKING | Mic → MediaRecorder → binary blob via WebSocket. |
+| 23 | LLM response rendering | WORKING | WebSocket `response` messages → MessageBubble. |
+| 24 | TTS audio playback (`lib/audio.ts`) | WORKING | `queueAudioBuffer()` (WS binary) and `playTTS()` (HTTP). |
+| 25 | System prompts (`lib/prompts.ts`) | WORKING | Unified prompt builder with level + topic context. **Needs multi-language support.** |
 
 ### Database & Auth
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 19 | Supabase schema (6 tables + RLS) | WORKING | profiles, sessions, messages, pronunciation_errors, grammar_errors, progress. |
-| 20 | Auth: Sign up/in | WORKING | Real Supabase Auth calls with error handling and form validation. |
-| 21 | Auth: Route protection (middleware) | WORKING | Middleware checks auth on protected routes, redirects to /auth. |
-| 22 | Auth: Sign out | WORKING | NavBar button calls supabase.auth.signOut(). |
-| 23 | Auth: Password reset | NOT STARTED | i18n text exists, no code. |
-| 24 | Auth: User state in app | WORKING | AuthProvider fetches user on mount, listens for auth changes, populates useAuthStore. |
-| 25 | Session persistence to DB | WORKING | Session row created on connect, messages saved on send/receive, scores updated on end. |
-| 26 | Dashboard data queries | WORKING | Queries sessions table with ordering/limits, computes score averages. |
-| 27 | Profile data from DB | WORKING | AuthProvider reads profile, settings page persists ui_language and llm_provider to profiles table. |
+| 26 | Supabase schema (6 tables + RLS) | WORKING | **Bug: mode CHECK constraint missing 'unified'**. |
+| 27 | Auth: Sign up/in | WORKING | Real Supabase Auth with error handling. |
+| 28 | Auth: Route protection (middleware) | WORKING | Middleware checks auth, redirects to /auth. |
+| 29 | Auth: Sign out | WORKING | NavBar button calls supabase.auth.signOut(). |
+| 30 | Auth: Password reset | NOT STARTED | i18n text exists, no code. |
+| 31 | Auth: User state in app | WORKING | AuthProvider fetches user, populates useAuthStore. |
+| 32 | Session persistence to DB | PARTIAL | Session rows created but **inserts fail silently** due to mode constraint. |
+| 33 | Dashboard data queries | WORKING | Queries sessions table with ordering/limits. |
+| 34 | Profile data from DB | WORKING | AuthProvider reads profile, settings persist to profiles table. |
+| 35 | Auth callback route | WORKING | **Bug: hardcodes `/en/dashboard`**. |
 
 ### Frontend Features
 
 | # | Feature | Status | Details |
 |---|---------|--------|---------|
-| 28 | Landing page | WORKING | Gradient hero, glass feature cards, stats bar, animated CTA. All text via i18n. |
-| 29 | Auth page | WORKING | Glass card, cross-fade sign in/up, password strength indicator, error display. |
-| 30 | Onboarding (4-step wizard) | PARTIAL | Level/Module/Topic/Mode selection works with syllabus data. Not persisted to DB. Selections lost on refresh. |
-| 31 | Session page (full integration) | WORKING | 565-line page wiring WebSocket, audio capture, messages, TTS, IPA, and DB persistence. Connection status indicator. |
-| 32 | Mic button (audio capture) | WORKING | Pulse rings, glow, state transitions. Captures real audio via useAudioCapture hook. |
-| 33 | Conversation messages | WORKING | MessageBubble with slide-in animations. Real messages from WebSocket + Supabase. |
-| 34 | Free Chat mode | WORKING | Open conversation at user's level. Empty state with i18n text. |
-| 35 | Real-Time Correction mode | WORKING | Main chat + corrections sidebar showing last 5 assistant messages. All text via i18n. |
-| 36 | Guided Teaching mode | WORKING | Topic vocabulary sidebar, conversation starters, lesson progress bar. All text via i18n. |
-| 37 | IPA Modal | WORKING | Color-coded IPA diff, severity badge, TTS playback, explanation area. All text via i18n. |
-| 38 | Session End Overlay | WORKING | Animated score rings (fluency/grammar/pronunciation), overall score, practice again / view dashboard buttons. All text via i18n. |
-| 39 | Dashboard (stats + history) | WORKING | Real Supabase data: session count, average scores, skill breakdown, session history list. |
-| 40 | Settings: Language switching | WORKING | next-intl locale switching via settings page + NavBar dropdown. All 4 locales complete. |
-| 41 | Settings: LLM provider | WORKING | Selection persists to localStorage and Supabase profiles table. Sent to backend via WebSocket config. |
-| 42 | Settings: Theme | WORKING | ThemeProvider applies dark/light/system class to `<html>`. Persists to localStorage. |
-| 43 | Settings: Delete account | PARTIAL | Calls supabase.auth.signOut() with confirmation dialog. Does not fully delete Supabase data. |
-| 44 | Toast notifications | WORKING | Used for settings feedback. |
-| 45 | i18n (4 languages) | WORKING | EN/ES/FR/DE complete. All UI strings through next-intl — zero hardcoded strings. |
-| 46 | UI component library (13 components) | WORKING | Button, Card, Input, Badge, Spinner, Skeleton, ProgressBar, Modal, Toast, Toggle, Select, Avatar, Tooltip. |
-| 47 | Animation system | WORKING | 12 reusable Framer Motion variants. Page transitions, stagger, scroll reveal. |
-| 48 | Responsive layout (NavBar + Sidebar) | WORKING | Desktop nav, mobile hamburger drawer, sidebar with mobile trigger. |
-| 49 | Design token system | WORKING | Full CSS custom properties: colors, surfaces, typography, shadows, radii, z-index, transitions. |
-| 50 | Docker (frontend + backend) | WORKING | docker-compose with build args for NEXT_PUBLIC_ vars, host.docker.internal networking. |
+| 36 | Landing page | WORKING | Gradient hero, glass cards, stats. All text via i18n. |
+| 37 | Auth page | WORKING | Glass card, cross-fade sign in/up. **Bug: hardcoded German heading.** |
+| 38 | Onboarding (4-step wizard) | NOT STARTED | Old module/topic/mode selection deprecated. New language/level/goals/welcome needed. |
+| 39 | Session page (unified mode) | WORKING | WebSocket, audio capture, messages, TTS, IPA, DB persistence. |
+| 40 | Mic button (audio capture) | WORKING | Pulse rings, glow, state transitions. |
+| 41 | Conversation messages | WORKING | MessageBubble with slide-in animations. |
+| 42 | Unified conversation mode | WORKING | Single mode replacing Free Chat / Correction / Teaching. |
+| 43 | Free Chat mode | DEPRECATED | Superseded by unified mode. |
+| 44 | Real-Time Correction mode | DEPRECATED | Superseded by unified mode. |
+| 45 | Guided Teaching mode | DEPRECATED | Superseded by unified mode. |
+| 46 | Tap-to-fix corrections | NOT STARTED | Loora-inspired correction UX. |
+| 47 | Conversation starters | NOT STARTED | For A1-A2 learners. |
+| 48 | IPA Modal | WORKING | Color-coded IPA diff, severity badge, TTS playback. |
+| 49 | Session End Overlay | WORKING | Score rings. **Needs redesign: key takeaways + streak.** |
+| 50 | Dashboard (stats + history) | WORKING | Real Supabase data. **Needs error patterns section.** |
+| 51 | Settings: Language switching | WORKING | next-intl locale switching. All 4 locales. |
+| 52 | Settings: LLM provider | WORKING | Persists to localStorage and Supabase. |
+| 53 | Settings: Theme | WORKING | ThemeProvider: dark/light/system. |
+| 54 | Settings: Target language | NOT STARTED | Depends on multi-language support. |
+| 55 | Settings: Delete account | PARTIAL | Signs out only. **Does not delete Supabase data.** |
+| 56 | Toast notifications | WORKING | Used for settings feedback. |
+| 57 | i18n (4 languages) | WORKING | EN/ES/FR/DE. **Bug: some hardcoded strings remain.** |
+| 58 | UI component library (13 components) | WORKING | Button, Card, Input, Badge, Spinner, etc. |
+| 59 | Animation system | WORKING | 12 reusable Framer Motion variants. |
+| 60 | Responsive layout | WORKING | Desktop nav, mobile drawer, sidebar. |
+| 61 | Design token system | WORKING | Full CSS custom properties. |
+| 62 | Docker (frontend + backend) | WORKING | docker-compose. **Needs multi-stage builds + health checks.** |
+| 63 | Pricing page | NOT STARTED | Free vs Pro tier comparison. |
+| 64 | Upgrade prompt | NOT STARTED | Shown when free tier limit hit. |
+| 65 | Streaks & milestones | NOT STARTED | Daily streak tracking + milestone badges. |
+| 66 | Error patterns dashboard | NOT STARTED | Cross-session error analysis. |
+| 67 | CI/CD pipeline | NOT STARTED | GitHub Actions for tests + build. |
+| 68 | E2E tests | NOT STARTED | Playwright critical flow tests. |
 
-### Remaining Work (Priority Order)
+### Known Bugs (Priority Order)
 
-1. **Grammar scoring** — Currently placeholder (~70 + message count). Should use LLM feedback for real scoring.
-2. **Onboarding persistence** — Selections lost on refresh. Should persist to session store or Supabase.
-3. **Password reset** — i18n text exists, no code.
-4. **Account deletion** — Currently just signs out. Should delete Supabase user data.
-5. **Error pattern tracking** — No cross-session error analysis yet (Phase 2 feature).
-6. **Streaming LLM responses** — Currently waits for full response. Could stream tokens for perceived latency.
+| # | Bug | Severity | Status |
+|---|-----|----------|--------|
+| 1 | `sessions.mode` CHECK missing 'unified' — inserts silently fail | CRITICAL | Open |
+| 2 | IPA comparison passes same word as both spoken and correct | HIGH | Open |
+| 3 | Auth callback hardcodes `/en/dashboard` | MEDIUM | Open |
+| 4 | No WebSocket authentication | CRITICAL | Open |
+| 5 | grammar_errors + pronunciation_errors tables never written to | HIGH | Open |
+| 6 | progress table completely unused | HIGH | Open |
+| 7 | Hardcoded strings in TopicChips, auth, dashboard, password strength | MEDIUM | Open |
+| 8 | STT hardcoded to `language="de"` | HIGH | Open |
+| 9 | TTS voices German-only | HIGH | Open |
